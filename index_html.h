@@ -21,30 +21,41 @@ div  { background-color:#888888; color:#ffffff; border:0px; padding:0px; margin:
 </style>
 <script>
 
-function SERVOinit() { }
-
-function doDisplay() { }
+function lazyBuginit() {
+  ajaxObj=[]; tiltX=0; tiltY=0;
+  requestAJAX('getTilt');
+  doDisplay(); }
+  
+function doDisplay() {
+  document.getElementById("tiltX").innerHTML=tiltX+" Grad";
+  document.getElementById("tiltY").innerHTML=tiltY+" Grad"; }
 
 function doRange(doSet) { }
 
-function lbDefault() { sendAJAX('lbDefault'); }
-function lbTest1() { sendAJAX('lbTest1'); }
-function lbTest2() { sendAJAX('lbTest2'); }
-function turnLeftA() { sendAJAX('turnLeftA'); }
-function turnLeftB() { sendAJAX('turnLeftB'); }
-function turnLeftC() { sendAJAX('turnLeftC'); }
-function turnRightA() { sendAJAX('turnRightA'); }
-function turnRightB() { sendAJAX('turnRightB'); }
-function goFrontA() { sendAJAX('goFrontA'); }
-function goFrontB() { sendAJAX('goFrontB'); }
-function goFrontC() { sendAJAX('goFrontC'); }
-function goRearA() { sendAJAX('goRearA'); }
-function goRearB() { sendAJAX('goRearB'); }
+function lbDefault() { requestAJAX('lbDefault'); }
+function lbTest1() { requestAJAX('lbTest1'); }
+function lbTest2() { requestAJAX('lbTest2'); }
+function turnLeftA() { requestAJAX('turnLeftA'); }
+function turnLeftB() { requestAJAX('turnLeftB'); }
+function turnLeftC() { requestAJAX('turnLeftC'); }
+function turnRightA() { requestAJAX('turnRightA'); }
+function turnRightB() { requestAJAX('turnRightB'); }
+function goFrontA() { requestAJAX('goFrontA'); }
+function goFrontB() { requestAJAX('goFrontB'); }
+function goFrontC() { requestAJAX('goFrontC'); }
+function goRearA() { requestAJAX('goRearA'); }
+function goRearB() { requestAJAX('goRearB'); }
+function getTilt() { requestAJAX('getTilt'); }
 
-function sendAJAX(value) {
-  ajaxObj=new XMLHttpRequest; ajaxObj.open("GET",value,true); ajaxObj.setRequestHeader("Content-Type","application/x-www-form-urlencoded"); ajaxObj.send(); }
+function requestAJAX(value) {
+  ajaxObj[value]=new XMLHttpRequest; ajaxObj[value].url=value; ajaxObj[value].open("GET",value,true);
+  ajaxObj[value].setRequestHeader("Content-Type","application/x-www-form-urlencoded"); ajaxObj[value].addEventListener('load',replyAJAX); ajaxObj[value].send(); }
 
-</script></head><body onload="SERVOinit();">
+function replyAJAX(event) {
+  if (event.target.status==200) {
+    if (event.target.url=="getTilt") { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1; doDisplay(); } } }
+
+</script></head><body onload="lazyBuginit();">
 
 <div><div class="x0a">lazyBug</div></div>
 <div><div class="x0b">Hexapod</div></div>
@@ -52,9 +63,11 @@ function sendAJAX(value) {
 <div class="x1" onclick="location.replace('/chooseAP');">Choose WLAN AP</div></div>
 
 <div>
-<div><div class="x0" onclick="lbDefault();">Default</div></div>
-<div><div class="x0" onclick="lbTest1();">Test 1</div></div>
-<div><div class="x0" onclick="lbTest2();">Test 2</div></div>
+<div><div class="x2" id="tiltX" onclick="getTilt();"></div>
+     <div class="x2" id="tiltY" onclick="getTilt();"></div></div>
+<div><div class="x1" onclick="lbDefault();">Default</div></div>
+<div><div class="x1" onclick="lbTest1();">Test 1</div></div>
+<div><div class="x1" onclick="lbTest2();">Test 2</div></div>
 <div><div class="x2" onclick="turnLeftA();">Turn Left A</div>
      <div class="x2" onclick="turnLeftB();">Turn Left B</div></div>
 <div><div class="x2" onclick="turnRightA();">Turn Right A</div>
