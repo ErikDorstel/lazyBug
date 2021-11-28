@@ -23,12 +23,12 @@ div  { background-color:#888888; color:#ffffff; border:0px; padding:0px; margin:
 
 function lazyBuginit() {
   ajaxObj=[]; tiltX=0; tiltY=0;
-  requestAJAX('getTilt');
+  getTilt(); window.setInterval("getTilt();",1000);
   doDisplay(); }
   
 function doDisplay() {
-  document.getElementById("tiltX").innerHTML=tiltX+" Grad";
-  document.getElementById("tiltY").innerHTML=tiltY+" Grad"; }
+  document.getElementById("tiltX").innerHTML="X "+tiltX+" Grad";
+  document.getElementById("tiltY").innerHTML="Y "+tiltY+" Grad"; }
 
 function doRange(doSet) { }
 
