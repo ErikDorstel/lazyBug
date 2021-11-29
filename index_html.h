@@ -23,7 +23,7 @@ div  { background-color:#888888; color:#ffffff; border:0px; padding:0px; margin:
 
 function lazyBuginit() {
   ajaxObj=[]; tiltX=0; tiltY=0;
-  getTilt(); window.setInterval("getTilt();",1000);
+  getTilt(); getTiltID=window.setInterval("getTilt();",1000);
   doDisplay(); }
   
 function doDisplay() {
@@ -46,6 +46,7 @@ function goFrontC() { requestAJAX('goFrontC'); }
 function goRearA() { requestAJAX('goRearA'); }
 function goRearB() { requestAJAX('goRearB'); }
 function getTilt() { requestAJAX('getTilt'); }
+function calibrateTilt() { window.clearInterval(getTiltID); tiltX=999; tiltY=999; doDisplay(); requestAJAX('calibrateTilt'); }
 
 function requestAJAX(value) {
   ajaxObj[value]=new XMLHttpRequest; ajaxObj[value].url=value; ajaxObj[value].open("GET",value,true);
@@ -53,7 +54,8 @@ function requestAJAX(value) {
 
 function replyAJAX(event) {
   if (event.target.status==200) {
-    if (event.target.url=="getTilt") { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1; doDisplay(); } } }
+    if (event.target.url=="getTilt") { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1; doDisplay(); }
+    else if (event.target.url=="calibrateTilt") { getTiltID=window.setInterval("getTilt();",1000); } } }
 
 </script></head><body onload="lazyBuginit();">
 
@@ -65,6 +67,7 @@ function replyAJAX(event) {
 <div>
 <div><div class="x2" id="tiltX" onclick="getTilt();"></div>
      <div class="x2" id="tiltY" onclick="getTilt();"></div></div>
+<div><div class="x1" onclick="calibrateTilt();">Calibrate Tilt Sensor</div></div>
 <div><div class="x1" onclick="lbDefault();">Default</div></div>
 <div><div class="x1" onclick="lbTest1();">Test 1</div></div>
 <div><div class="x1" onclick="lbTest2();">Test 2</div></div>

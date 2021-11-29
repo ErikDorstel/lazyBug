@@ -17,8 +17,9 @@ String httpget(String request) {
   else if (request.indexOf("/goRearA")>=0) { goRearA(); }
   else if (request.indexOf("/goRearB")>=0) { goRearB(); }
 
-  else if (request.indexOf("/getTilt")>=0) {
-    getTilt(); response+=String(tilt.x) + "," + String(tilt.y) + ","; }
+  else if (request.indexOf("/getTilt")>=0) { getTilt(1); response+=String(tilt.x) + "," + String(tilt.y) + ","; }
+
+  else if (request.indexOf("/calibrateTilt")>=0) { calibrateTilt(500); }
 
   // WLAN Choose specific pages
 

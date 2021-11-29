@@ -13,25 +13,17 @@ float wrap180(float value) {
   while (value<-180) { value+=360; }
   return value; }
 
-void calibrateTilt() {
+void calibrateTilt(float count) {
   sensors_event_t a,g,t; float ax=0; float ay=0; float az=0;
-  for (int x=0;x<50;x++) { mpu.getEvent(&a,&g,&t);
-    ax+=a.acceleration.x; ay+=a.acceleration.y; az+=a.acceleration.z; delay(100); }
-  tilt.cax=ax/50.0; tilt.cay=ay/50.0; tilt.caz=az/50.0; }
-
-void getTilt() {
-  sensors_event_t a,g,t; mpu.getEvent(&a,&g,&t);
-  float ax=a.acceleration.x-tilt.cax;
-  float ay=a.acceleration.y-tilt.cay;
-  float az=a.acceleration.z+(9.81-tilt.caz);
-  tilt.x=wrap180((+atan2(ay,sqrt(az*az+ax*ax)))*57.29577951308232);
-  tilt.y=wrap180((-atan2(ax,sqrt(az*az+ay*ay)))*57.29577951308232); }
-
-void getTiltAvg() {
-  sensors_event_t a,g,t; float ax=0; float ay=0; float az=0;
-  for (int x=0;x<50;x++) { mpu.getEvent(&a,&g,&t);
+  for (int x=0;x<count;x++) { mpu.getEvent(&a,&g,&t);
     ax+=a.acceleration.x; ay+=a.acceleration.y; az+=a.acceleration.z; delay(10); }
-  ax=ax/50.0-tilt.cax; ay=ay/50.0-tilt.cay; az=az/50.0+(9.81-tilt.caz);
+  tilt.cax=ax/count; tilt.cay=ay/count; tilt.caz=az/count-9.81; }
+
+void getTilt(float count) {
+  sensors_event_t a,g,t; float ax=0; float ay=0; float az=0;
+  for (int x=0;x<count;x++) { mpu.getEvent(&a,&g,&t);
+    ax+=a.acceleration.x; ay+=a.acceleration.y; az+=a.acceleration.z; delay(10); }
+  ax=ax/count-tilt.cax; ay=ay/count-tilt.cay; az=az/count-tilt.caz;
   tilt.x=wrap180((+atan2(ay,sqrt(az*az+ax*ax)))*57.29577951308232);
   tilt.y=wrap180((-atan2(ax,sqrt(az*az+ay*ay)))*57.29577951308232); }
 
@@ -41,4 +33,4 @@ void initTilt() {
   mpu.setAccelerometerRange(MPU6050_RANGE_2_G); //2,4,8,16
   mpu.setGyroRange(MPU6050_RANGE_250_DEG);      //250,500,1000,2000
   mpu.setFilterBandwidth(MPU6050_BAND_5_HZ);    //5,10,21,44,94,184,260
-  calibrateTilt(); getTilt(); }
+  calibrateTilt(1); getTilt(1); }
