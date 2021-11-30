@@ -27,8 +27,8 @@ function lazyBuginit() {
   doDisplay(); }
   
 function doDisplay() {
-  document.getElementById("tiltX").innerHTML="X "+tiltX+" Grad";
-  document.getElementById("tiltY").innerHTML="Y "+tiltY+" Grad"; }
+  document.getElementById("tiltX").innerHTML="X: "+tiltX+" &#176;";
+  document.getElementById("tiltY").innerHTML="Y: "+tiltY+" &#176;"; }
 
 function doRange(doSet) { }
 
