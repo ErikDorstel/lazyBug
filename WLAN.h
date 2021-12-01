@@ -1,8 +1,6 @@
 #include <WiFi.h>
 WiFiServer tcpServer(80);
 WiFiUDP dnsServer;
-#include <Preferences.h>
-Preferences preferences;
 
 const char* ssidAP="lazyBug"; const char* passwordAP="";
 String ssidStation=""; String passwordStation=""; boolean statusStation=false;

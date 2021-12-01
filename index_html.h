@@ -9,26 +9,33 @@ char *index_html=R"(
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <style>
-html { font-family:Arial; }
-div  { background-color:#888888; color:#ffffff; border:0px; padding:0px; margin:0px; text-align:center; width:100%; user-select:none; display:inline-block; }
-.x0a { background-color:#C0A0A0; padding:0.2em 0em 0.1em; width:100%; font-size:1.5em; }
-.x0b { background-color:#C0A0A0; padding:0.1em 0em 0.2em; width:100%; font-size:1.2em; }
-.x0  { background-color:#C0A0A0; padding:0.3em 0em; width:100%; font-size:1.4em; }
-.x1  { background-color:#A0B0C0; padding:0.3em 0em; width:100%; font-size:1.4em; }
-.x2  { background-color:#888888; padding:0.3em 0em; width:48%; font-size:1.4em; }
-.x3  { background-color:#888888; padding:0.3em 0em; width:32%; font-size:1.4em; }
-.x4  { background-color:#888888; padding:0.3em 0em; width:24%; font-size:1.4em; }
+html   { font-family:Arial; }
+div    { background-color:#888888; color:#ffffff; border:0px; padding:0px; margin:0px; text-align:center; width:100%; user-select:none; display:inline-block; }
+select { background-color:#888888; color:#ffffff; font-size:1.0em; border:0px; padding:0px; margin:0px; }
+table  { margin-left:auto; margin-right:auto; }
+td     { text-align:right; }
+.x0a   { background-color:#C0A0A0; padding:0.2em 0em 0.1em; width:100%; font-size:1.5em; }
+.x0b   { background-color:#C0A0A0; padding:0.1em 0em 0.2em; width:100%; font-size:1.2em; }
+.x0    { background-color:#C0A0A0; padding:0.3em 0em; width:100%; font-size:1.4em; }
+.x1    { background-color:#A0B0C0; padding:0.3em 0em; width:100%; font-size:1.4em; }
+.x2    { background-color:#888888; padding:0.3em 0em; width:48%; font-size:1.4em; }
+.x3    { background-color:#888888; padding:0.3em 0em; width:32%; font-size:1.4em; }
+.x4    { background-color:#888888; padding:0.3em 0em; width:24%; font-size:1.4em; }
 </style>
 <script>
 
 function lazyBuginit() {
-  ajaxObj=[]; tiltX=0; tiltY=0;
-  getTilt(); getTiltID=window.setInterval("getTilt();",1000);
+  ajaxObj=[]; tiltX=0; tiltY=0; legAdjust="0,0,0,0,0,0,";
+  getTilt(1); getTiltID=window.setInterval("getTilt(1);",1000); getLegAdjust();
   doDisplay(); }
   
 function doDisplay() {
   document.getElementById("tiltX").innerHTML="X: "+tiltX+" &#176;";
-  document.getElementById("tiltY").innerHTML="Y: "+tiltY+" &#176;"; }
+  document.getElementById("tiltY").innerHTML="Y: "+tiltY+" &#176;";
+  html="<table><tr><td> </td><td>Front</td><td>Middle</td><td>Rear</td></tr>";
+  html+="<tr><td>Right</td><td>"+legAdjust.split(",")[3]+"</td><td>"+legAdjust.split(",")[4]+"</td><td>"+legAdjust.split(",")[5]+"</td></tr>";
+  html+="<tr><td>Left</td><td>"+legAdjust.split(",")[0]+"</td><td>"+legAdjust.split(",")[1]+"</td><td>"+legAdjust.split(",")[2]+"</td></tr></table>";
+  document.getElementById("adjBtn").innerHTML=html; }
 
 function doRange(doSet) { }
 
@@ -45,8 +52,15 @@ function goFrontB() { requestAJAX('goFrontB'); }
 function goFrontC() { requestAJAX('goFrontC'); }
 function goRearA() { requestAJAX('goRearA'); }
 function goRearB() { requestAJAX('goRearB'); }
-function getTilt() { requestAJAX('getTilt'); }
-function calibrateTilt() { window.clearInterval(getTiltID); tiltX=999; tiltY=999; doDisplay(); requestAJAX('calibrateTilt'); }
+function getTilt(value) { requestAJAX('getTilt,'+value); }
+function getLegAdjust() { requestAJAX('getLegAdjust'); }
+function saveLegAdjust() { requestAJAX('saveLegAdjust'); }
+function setLegAdjust(value) {
+  requestAJAX('setLegAdjust,'+document.getElementById("xSel").selectedIndex+','+document.getElementById("ySel").selectedIndex+','+value);
+  getLegAdjust(); }
+function calibrateTilt() {
+  document.getElementById("calBtn").onclick=false; window.clearInterval(getTiltID);
+  tiltX=999; tiltY=999; doDisplay(); requestAJAX('calibrateTilt'); }
 
 function requestAJAX(value) {
   ajaxObj[value]=new XMLHttpRequest; ajaxObj[value].url=value; ajaxObj[value].open("GET",value,true);
@@ -54,8 +68,9 @@ function requestAJAX(value) {
 
 function replyAJAX(event) {
   if (event.target.status==200) {
-    if (event.target.url=="getTilt") { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1; doDisplay(); }
-    else if (event.target.url=="calibrateTilt") { getTiltID=window.setInterval("getTilt();",1000); } } }
+    if (event.target.url.startsWith("getTilt")) { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1; doDisplay(); }
+    else if (event.target.url=="calibrateTilt") { getTiltID=window.setInterval("getTilt(1);",1000); document.getElementById("calBtn").onclick=calibrateTilt; }
+    else if (event.target.url=="getLegAdjust") { legAdjust=event.target.responseText; doDisplay(); } } }
 
 </script></head><body onload="lazyBuginit();">
 
@@ -65,9 +80,23 @@ function replyAJAX(event) {
 <div class="x1" onclick="location.replace('/chooseAP');">Choose WLAN AP</div></div>
 
 <div>
-<div><div class="x2" id="tiltX" onclick="getTilt();"></div>
-     <div class="x2" id="tiltY" onclick="getTilt();"></div></div>
-<div><div class="x1" onclick="calibrateTilt();">Calibrate Tilt Sensor</div></div>
+<div><div class="x2" id="tiltX"></div>
+     <div class="x2" id="tiltY"></div></div>
+<div><div class="x1" id="calBtn" onclick="calibrateTilt();">Calibrate Tilt Sensor</div></div>
+<div><div class="x1" id="savBtn" onclick="saveLegAdjust();">Save Leg Adjust Values</div></div>
+<div><div class="x1" id="adjBtn"></div></div>
+<div><div class="x3">Adjust Leg</div>
+     <div class="x3"><select id="xSel">
+     <option value="0">Left</option>
+     <option value="1">Right</option></select></div>
+     <div class="x3"><select id="ySel">
+     <option value="0">Front</option>
+     <option value="1">Middle</option>
+     <option value="2">Rear</option></select></div></div>
+<div><div class="x4" onclick="setLegAdjust(-10);">&#8722; 10</div>
+     <div class="x4" onclick="setLegAdjust(-1);">&#8722; 1</div>
+     <div class="x4" onclick="setLegAdjust(1);">+ 1</div>
+     <div class="x4" onclick="setLegAdjust(10);">+ 10</div></div>
 <div><div class="x1" onclick="lbDefault();">Default</div></div>
 <div><div class="x1" onclick="lbTest1();">Test 1</div></div>
 <div><div class="x1" onclick="lbTest2();">Test 2</div></div>

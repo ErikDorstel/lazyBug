@@ -17,9 +17,22 @@ String httpget(String request) {
   else if (request.indexOf("/goRearA")>=0) { goRearA(); }
   else if (request.indexOf("/goRearB")>=0) { goRearB(); }
 
-  else if (request.indexOf("/getTilt")>=0) { getTilt(1); response+=String(tilt.x) + "," + String(tilt.y) + ","; }
+  else if (request.indexOf("/getTilt")>=0) {
+    int a=request.indexOf(",")+1; getTilt(request.substring(a).toInt());
+    response+=String(tilt.x) + "," + String(tilt.y) + ","; }
 
   else if (request.indexOf("/calibrateTilt")>=0) { calibrateTilt(500); }
+
+  else if (request.indexOf("/getLegAdjust")>=0) {
+    for (int x=0;x<2;x++) { for (int y=0;y<3;y++) {
+      response+=String(leg.adjustValue[x][y][K]) + ","; } } }
+
+  else if (request.indexOf("/setLegAdjust")>=0) {
+    int a=request.indexOf(",")+1; int b=request.indexOf(",",a)+1; int c=request.indexOf(",",b)+1;
+    int x=request.substring(a,b-1).toInt(); int y=request.substring(b,c-1).toInt(); int z=request.substring(c).toInt();
+    leg.adjustValue[x][y][K]+=z; leg.adjustValue[x][y][F]+=z*-1; setLeg(x,y,Up,1,200); setLeg(x,y,Down,1,1); }
+
+  else if (request.indexOf("/saveLegAdjust")>=0) { saveLegAdjust(); }
 
   // WLAN Choose specific pages
 
