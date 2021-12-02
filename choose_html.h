@@ -2,7 +2,7 @@ char *choose_html=R"(
 
 <!DOCTYPE html>
 <html lang="en"><head>
-<title>lazyBug - Hexapod</title>
+<title>lazyBug - Hexapod Robot</title>
 <meta name="author" content="Erik Dorstel">
 <meta name="generator" content="vi">
 <meta name="repository" content="https://github.com/ErikDorstel/lazyBug">
@@ -59,7 +59,7 @@ function h2a(hValue) { aValue=""; for (idx=0;idx<hValue.length;idx+=2) { aValue+
 </script></head><body onload="initChoose();">
 
 <div><div class="x0a">lazyBug</div></div>
-<div><div class="x0b">Hexapod</div></div>
+<div><div class="x0b">Hexapod Robot</div></div>
 <div id="scanAP"><div class="x1">&nbsp;</div></div>
 <div><div class="x2">WLAN Name</div>
      <div class="x2">Password</div></div>

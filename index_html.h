@@ -2,7 +2,7 @@ char *index_html=R"(
 
 <!DOCTYPE html>
 <html lang="en"><head>
-<title>lazyBug - Hexapod</title>
+<title>lazyBug - Hexapod Robot</title>
 <meta name="author" content="Erik Dorstel">
 <meta name="generator" content="vi">
 <meta name="repository" content="https://github.com/ErikDorstel/lazyBug">
@@ -54,13 +54,14 @@ function goRearA() { requestAJAX('goRearA'); }
 function goRearB() { requestAJAX('goRearB'); }
 function getTilt(value) { requestAJAX('getTilt,'+value); }
 function getLegAdjust() { requestAJAX('getLegAdjust'); }
-function saveLegAdjust() { requestAJAX('saveLegAdjust'); }
+function saveLegAdjust() { document.getElementById("savBtn").style.color="#888888"; requestAJAX('saveLegAdjust'); }
 function setLegAdjust(value) {
   requestAJAX('setLegAdjust,'+document.getElementById("xSel").selectedIndex+','+document.getElementById("ySel").selectedIndex+','+value);
   getLegAdjust(); }
 function calibrateTilt() {
+  document.getElementById("calBtn").style.color="#888888";
   document.getElementById("calBtn").onclick=false; window.clearInterval(getTiltID);
-  tiltX=999; tiltY=999; doDisplay(); requestAJAX('calibrateTilt'); }
+  requestAJAX('calibrateTilt'); }
 
 function requestAJAX(value) {
   ajaxObj[value]=new XMLHttpRequest; ajaxObj[value].url=value; ajaxObj[value].open("GET",value,true);
@@ -69,13 +70,14 @@ function requestAJAX(value) {
 function replyAJAX(event) {
   if (event.target.status==200) {
     if (event.target.url.startsWith("getTilt")) { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1; doDisplay(); }
-    else if (event.target.url=="calibrateTilt") { getTiltID=window.setInterval("getTilt(1);",1000); document.getElementById("calBtn").onclick=calibrateTilt; }
+    else if (event.target.url=="calibrateTilt") { getTiltID=window.setInterval("getTilt(1);",1000); document.getElementById("calBtn").onclick=calibrateTilt; document.getElementById("calBtn").style.color="#ffffff"; }
+    else if (event.target.url=="saveLegAdjust") { document.getElementById("savBtn").style.color="#ffffff"; }
     else if (event.target.url=="getLegAdjust") { legAdjust=event.target.responseText; doDisplay(); } } }
 
 </script></head><body onload="lazyBuginit();">
 
 <div><div class="x0a">lazyBug</div></div>
-<div><div class="x0b">Hexapod</div></div>
+<div><div class="x0b">Hexapod Robot</div></div>
 
 <div class="x1" onclick="location.replace('/chooseAP');">Choose WLAN AP</div></div>
 

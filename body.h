@@ -115,7 +115,6 @@ void initBody() {
 
   int c=0; for (int x=0;x<3;x++) { for (int y=0;y<3;y++) {
     leg.midValue[L][x][y]=servoDef; leg.midValue[R][x][y]=servoDef;
-    leg.currentValue[L][x][y]=servoDef+leg.adjustValue[L][x][y]; leg.currentValue[R][x][y]=servoDef+leg.adjustValue[R][x][y];
     if (y==S) { leg.frontValue[L][x][y]=servoMax; leg.frontValue[R][x][y]=servoMin; }
     if (y==S) { leg.rearValue[L][x][y]=servoMin; leg.rearValue[R][x][y]=servoMax; }
     if (y==S) { leg.adjDirValue[L][x][y]=1; leg.adjDirValue[R][x][y]=-1; }
@@ -125,6 +124,8 @@ void initBody() {
     if (y==F) { leg.upValue[L][x][y]=servoMin; leg.upValue[R][x][y]=servoMax; }
     if (y==F) { leg.downValue[L][x][y]=servoMax; leg.downValue[R][x][y]=servoMin; }
     if (y==F) { leg.adjDirValue[L][x][y]=-1; leg.adjDirValue[R][x][y]=1; }
+    leg.currentValue[L][x][y]=servoDef+(leg.adjustValue[L][x][y]*leg.adjDirValue[L][x][y]);
+    leg.currentValue[R][x][y]=servoDef+(leg.adjustValue[R][x][y]*leg.adjDirValue[R][x][y]);
     leg.channel[L][x][y]=c; leg.channel[R][x][y]=c;
     if (c==2) { c=7; } else if (c==9) { c=13; } else { c++; } } }
 
