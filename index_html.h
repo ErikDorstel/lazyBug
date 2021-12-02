@@ -54,6 +54,7 @@ function goRearA() { requestAJAX('goRearA'); }
 function goRearB() { requestAJAX('goRearB'); }
 function getTilt(value) { requestAJAX('getTilt,'+value); }
 function getLegAdjust() { requestAJAX('getLegAdjust'); }
+function loadLegAdjust() { document.getElementById("loaBtn").style.color="#888888"; requestAJAX('loadLegAdjust'); }
 function saveLegAdjust() { document.getElementById("savBtn").style.color="#888888"; requestAJAX('saveLegAdjust'); }
 function setLegAdjust(value) {
   requestAJAX('setLegAdjust,'+document.getElementById("xSel").selectedIndex+','+document.getElementById("ySel").selectedIndex+','+value);
@@ -71,6 +72,7 @@ function replyAJAX(event) {
   if (event.target.status==200) {
     if (event.target.url.startsWith("getTilt")) { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1; doDisplay(); }
     else if (event.target.url=="calibrateTilt") { getTiltID=window.setInterval("getTilt(1);",1000); document.getElementById("calBtn").onclick=calibrateTilt; document.getElementById("calBtn").style.color="#ffffff"; }
+    else if (event.target.url=="loadLegAdjust") { getLegAdjust(); document.getElementById("loaBtn").style.color="#ffffff"; }
     else if (event.target.url=="saveLegAdjust") { document.getElementById("savBtn").style.color="#ffffff"; }
     else if (event.target.url=="getLegAdjust") { legAdjust=event.target.responseText; doDisplay(); } } }
 
@@ -85,6 +87,7 @@ function replyAJAX(event) {
 <div><div class="x2" id="tiltX"></div>
      <div class="x2" id="tiltY"></div></div>
 <div><div class="x1" id="calBtn" onclick="calibrateTilt();">Calibrate Tilt Sensor</div></div>
+<div><div class="x1" id="loaBtn" onclick="loadLegAdjust();">Load Leg Adjust Values</div></div>
 <div><div class="x1" id="savBtn" onclick="saveLegAdjust();">Save Leg Adjust Values</div></div>
 <div><div class="x1" id="adjBtn"></div></div>
 <div><div class="x3">Adjust Leg</div>
