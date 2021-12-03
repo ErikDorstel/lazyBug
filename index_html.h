@@ -25,13 +25,14 @@ td     { text-align:right; }
 <script>
 
 function lazyBuginit() {
-  ajaxObj=[]; tiltX=0; tiltY=0; legAdjust="0,0,0,0,0,0,";
-  getTilt(1); getTiltID=window.setInterval("getTilt(1);",1000); getLegAdjust();
+  ajaxObj=[]; tiltX=0; tiltY=0; dist=9999; legAdjust="0,0,0,0,0,0,";
+  getTilt(1); getDist(); getTiltID=window.setInterval("getTilt(1);",1000); getDistID=window.setInterval("getDist();",1000); getLegAdjust();
   doDisplay(); }
   
 function doDisplay() {
   document.getElementById("tiltX").innerHTML="X: "+tiltX+" &#176;";
   document.getElementById("tiltY").innerHTML="Y: "+tiltY+" &#176;";
+  document.getElementById("dist").innerHTML=dist+" mm";
   html="<table><tr><td> </td><td>Front</td><td>Middle</td><td>Rear</td></tr>";
   html+="<tr><td>Right</td><td>"+legAdjust.split(",")[3]+"</td><td>"+legAdjust.split(",")[4]+"</td><td>"+legAdjust.split(",")[5]+"</td></tr>";
   html+="<tr><td>Left</td><td>"+legAdjust.split(",")[0]+"</td><td>"+legAdjust.split(",")[1]+"</td><td>"+legAdjust.split(",")[2]+"</td></tr></table>";
@@ -53,6 +54,7 @@ function goFrontC() { requestAJAX('goFrontC'); }
 function goRearA() { requestAJAX('goRearA'); }
 function goRearB() { requestAJAX('goRearB'); }
 function getTilt(value) { requestAJAX('getTilt,'+value); }
+function getDist(value) { requestAJAX('getDist'); }
 function getLegAdjust() { requestAJAX('getLegAdjust'); }
 function loadLegAdjust() { document.getElementById("loaBtn").style.color="#888888"; requestAJAX('loadLegAdjust'); }
 function saveLegAdjust() { document.getElementById("savBtn").style.color="#888888"; requestAJAX('saveLegAdjust'); }
@@ -71,6 +73,7 @@ function requestAJAX(value) {
 function replyAJAX(event) {
   if (event.target.status==200) {
     if (event.target.url.startsWith("getTilt")) { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1; doDisplay(); }
+    else if (event.target.url=="getDist") { dist=event.target.responseText*1; doDisplay(); }
     else if (event.target.url=="calibrateTilt") { getTiltID=window.setInterval("getTilt(1);",1000); document.getElementById("calBtn").onclick=calibrateTilt; document.getElementById("calBtn").style.color="#ffffff"; }
     else if (event.target.url=="loadLegAdjust") { getLegAdjust(); document.getElementById("loaBtn").style.color="#ffffff"; }
     else if (event.target.url=="saveLegAdjust") { document.getElementById("savBtn").style.color="#ffffff"; }
@@ -84,8 +87,9 @@ function replyAJAX(event) {
 <div class="x1" onclick="location.replace('/chooseAP');">Choose WLAN AP</div></div>
 
 <div>
-<div><div class="x2" id="tiltX"></div>
-     <div class="x2" id="tiltY"></div></div>
+<div><div class="x3" id="tiltX"></div>
+     <div class="x3" id="tiltY"></div>
+     <div class="x3" id="dist"></div></div>
 <div><div class="x1" id="calBtn" onclick="calibrateTilt();">Calibrate Tilt Sensor</div></div>
 <div><div class="x1" id="loaBtn" onclick="loadLegAdjust();">Load Leg Adjust Values</div></div>
 <div><div class="x1" id="savBtn" onclick="saveLegAdjust();">Save Leg Adjust Values</div></div>

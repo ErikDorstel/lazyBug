@@ -21,6 +21,8 @@ String httpget(String request) {
     int a=request.indexOf(",")+1; getTilt(request.substring(a).toInt());
     response+=String(tilt.x) + "," + String(tilt.y) + ","; }
 
+  else if (request.indexOf("/getDist")>=0) { getDist(); response+=String(dist); }
+
   else if (request.indexOf("/calibrateTilt")>=0) { calibrateTilt(500); }
 
   else if (request.indexOf("/getLegAdjust")>=0) {
