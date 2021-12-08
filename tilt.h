@@ -5,7 +5,7 @@
 TwoWire I2Ctwo=TwoWire(1);
 Adafruit_MPU6050 mpu;
 
-struct tiltStruct { float x; float y; float d; float cax; float cay; float caz; };
+struct tiltStruct { float x; float y; float d; float xy; float cax; float cay; float caz; };
 struct tiltStruct tilt;
 const float RADtoDEG=57.29577951308232;
 
@@ -27,7 +27,8 @@ void getTilt(float count) {
   ax=ax/count-tilt.cax; ay=ay/count-tilt.cay; az=az/count-tilt.caz;
   tilt.x=wrap180((+atan2(ay,sqrt(az*az+ax*ax)))*RADtoDEG);
   tilt.y=wrap180((-atan2(ax,sqrt(az*az+ay*ay)))*RADtoDEG);
-  tilt.d=wrap180(atan2(ax,ay)*RADtoDEG)+180; }
+  tilt.d=wrap180(atan2(ax,ay)*RADtoDEG)+180;
+  tilt.xy=sqrt(ax*ax+ay*ay)/9.81*90; }
 
 void initTilt() {
   I2Ctwo.begin(17,16); //SDA 17,SCL 16
