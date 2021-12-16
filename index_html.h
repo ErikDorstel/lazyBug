@@ -30,15 +30,15 @@ function lazyBuginit() {
   doDisplay(); }
   
 function doDisplay() {
-  document.getElementById("tiltX").innerHTML="X: "+tiltX+" &#176;";
-  document.getElementById("tiltY").innerHTML="Y: "+tiltY+" &#176;";
-  document.getElementById("tiltD").innerHTML="Dir: "+tiltD+" &#176;";
-  document.getElementById("tiltXY").innerHTML="Tilt: "+tiltXY+" &#176;";
-  document.getElementById("dist").innerHTML="Dist: "+dist+" mm";
+  id("tiltX").innerHTML="X: "+tiltX+" &#176;";
+  id("tiltY").innerHTML="Y: "+tiltY+" &#176;";
+  id("tiltD").innerHTML="Dir: "+tiltD+" &#176;";
+  id("tiltXY").innerHTML="Tilt: "+tiltXY+" &#176;";
+  id("dist").innerHTML="Dist: "+dist+" mm";
   html="<table><tr><td> </td><td>Front</td><td>Middle</td><td>Rear</td></tr>";
   html+="<tr><td>Right</td><td>"+legAdjust.split(",")[3]+"</td><td>"+legAdjust.split(",")[4]+"</td><td>"+legAdjust.split(",")[5]+"</td></tr>";
   html+="<tr><td>Left</td><td>"+legAdjust.split(",")[0]+"</td><td>"+legAdjust.split(",")[1]+"</td><td>"+legAdjust.split(",")[2]+"</td></tr></table>";
-  document.getElementById("adjBtn").innerHTML=html; }
+  id("adjBtn").innerHTML=html; }
 
 function doRange(doSet) { }
 
@@ -59,13 +59,13 @@ function getTilt(value) { requestAJAX('getTilt,'+value); }
 function getDist(value) { requestAJAX('getDist,'+value); }
 function getSensor(value1,value2) { requestAJAX('getSensor,'+value1+','+value2); }
 function getLegAdjust() { requestAJAX('getLegAdjust'); }
-function loadLegAdjust() { document.getElementById("loaBtn").style.color="#888888"; requestAJAX('loadLegAdjust'); }
-function saveLegAdjust() { document.getElementById("savBtn").style.color="#888888"; requestAJAX('saveLegAdjust'); }
+function loadLegAdjust() { id("loaBtn").style.color="#888888"; requestAJAX('loadLegAdjust'); }
+function saveLegAdjust() { id("savBtn").style.color="#888888"; requestAJAX('saveLegAdjust'); }
 function setLegAdjust(value) {
-  requestAJAX('setLegAdjust,'+document.getElementById("xSel").selectedIndex+','+document.getElementById("ySel").selectedIndex+','+value);
+  requestAJAX('setLegAdjust,'+id("xSel").selectedIndex+','+id("ySel").selectedIndex+','+value);
   getLegAdjust(); }
 function calibrateTilt() {
-  document.getElementById("calBtn").style.color="#888888"; document.getElementById("calBtn").onclick=false;
+  id("calBtn").style.color="#888888"; id("calBtn").onclick=false;
   window.clearInterval(getSensorID); requestAJAX('calibrateTilt'); }
 
 function requestAJAX(value) {
@@ -79,10 +79,12 @@ function replyAJAX(event) {
     else if (event.target.url.startsWith("getDist")) { dist=event.target.responseText*1; doDisplay(); }
     else if (event.target.url.startsWith("getSensor")) { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1;
       tiltD=event.target.responseText.split(",")[2]*1; tiltXY=event.target.responseText.split(",")[3]*1; dist=event.target.responseText.split(",")[4]*1; doDisplay(); }
-    else if (event.target.url=="calibrateTilt") { getSensorID=window.setInterval("getSensor(1,1);",1000); document.getElementById("calBtn").onclick=calibrateTilt; document.getElementById("calBtn").style.color="#ffffff"; }
-    else if (event.target.url=="loadLegAdjust") { getLegAdjust(); document.getElementById("loaBtn").style.color="#ffffff"; }
-    else if (event.target.url=="saveLegAdjust") { document.getElementById("savBtn").style.color="#ffffff"; }
+    else if (event.target.url=="calibrateTilt") { getSensorID=window.setInterval("getSensor(1,1);",1000); id("calBtn").onclick=calibrateTilt; id("calBtn").style.color="#ffffff"; }
+    else if (event.target.url=="loadLegAdjust") { getLegAdjust(); id("loaBtn").style.color="#ffffff"; }
+    else if (event.target.url=="saveLegAdjust") { id("savBtn").style.color="#ffffff"; }
     else if (event.target.url=="getLegAdjust") { legAdjust=event.target.responseText; doDisplay(); } } }
+
+function id(id) { return document.getElementById(id); }
 
 </script></head><body onload="lazyBuginit();">
 
