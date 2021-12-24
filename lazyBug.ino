@@ -1,8 +1,8 @@
 boolean debug=true;
 
 #include "tilt.h"
-#include "dist.h"
 #include "body.h"
+#include "dist.h"
 #include "brain.h"
 #include "WLAN.h"
 #include "DNS.h"
@@ -15,4 +15,4 @@ void setup() {
   initDist();
   initBody(); }
 
-void loop() { httpWorker(); dnsWorker(); bodyWorker(); }
+void loop() { httpWorker(); dnsWorker(); bodyWorker(); distWorker(); }

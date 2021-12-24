@@ -21,13 +21,11 @@ String httpget(String request) {
     int a=request.indexOf(",")+1; getTilt(request.substring(a).toInt());
     response+=String(tilt.x) + "," + String(tilt.y) + "," + String(tilt.d) + "," + String(tilt.xy) + ","; }
 
-  else if (request.indexOf("/getDist")>=0) {
-    int a=request.indexOf(",")+1; getDist(request.substring(a).toInt());
-    response+=String(dist); }
+  else if (request.indexOf("/getDist")>=0) { response+=String(dist) + ","; }
 
   else if (request.indexOf("/getSensor")>=0) {
-    int a=request.indexOf(",")+1; int b=request.indexOf(",",a)+1;
-    getTilt(request.substring(a,b-1).toInt()); getDist(request.substring(b).toInt());
+    int a=request.indexOf(",")+1;
+    getTilt(request.substring(a).toInt());
     response+=String(tilt.x) + "," + String(tilt.y) + "," + String(tilt.d) + "," + String(tilt.xy) + "," + String(dist) + ","; }
 
   else if (request.indexOf("/calibrateTilt")>=0) { calibrateTilt(500); }

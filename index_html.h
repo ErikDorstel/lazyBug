@@ -26,7 +26,7 @@ td     { text-align:right; }
 
 function lazyBuginit() {
   ajaxObj=[]; tiltX=0; tiltY=0; tiltD=0; tiltXY=0; dist=9999; legAdjust="0,0,0,0,0,0,";
-  getSensor(1,1); getSensorID=window.setInterval("getSensor(1,1);",1000); getLegAdjust();
+  getSensor(1); getSensorID=window.setInterval("getSensor(1);",1000); getLegAdjust();
   doDisplay(); }
   
 function doDisplay() {
@@ -57,7 +57,7 @@ function goRearA() { requestAJAX('goRearA'); }
 function goRearB() { requestAJAX('goRearB'); }
 function getTilt(value) { requestAJAX('getTilt,'+value); }
 function getDist(value) { requestAJAX('getDist,'+value); }
-function getSensor(value1,value2) { requestAJAX('getSensor,'+value1+','+value2); }
+function getSensor(value) { requestAJAX('getSensor,'+value); }
 function getLegAdjust() { requestAJAX('getLegAdjust'); }
 function loadLegAdjust() { id("loaBtn").style.color="#888888"; requestAJAX('loadLegAdjust'); }
 function saveLegAdjust() { id("savBtn").style.color="#888888"; requestAJAX('saveLegAdjust'); }
@@ -79,7 +79,7 @@ function replyAJAX(event) {
     else if (event.target.url.startsWith("getDist")) { dist=event.target.responseText*1; doDisplay(); }
     else if (event.target.url.startsWith("getSensor")) { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1;
       tiltD=event.target.responseText.split(",")[2]*1; tiltXY=event.target.responseText.split(",")[3]*1; dist=event.target.responseText.split(",")[4]*1; doDisplay(); }
-    else if (event.target.url=="calibrateTilt") { getSensorID=window.setInterval("getSensor(1,1);",1000); id("calBtn").onclick=calibrateTilt; id("calBtn").style.color="#ffffff"; }
+    else if (event.target.url=="calibrateTilt") { getSensorID=window.setInterval("getSensor(1);",1000); id("calBtn").onclick=calibrateTilt; id("calBtn").style.color="#ffffff"; }
     else if (event.target.url=="loadLegAdjust") { getLegAdjust(); id("loaBtn").style.color="#ffffff"; }
     else if (event.target.url=="saveLegAdjust") { id("savBtn").style.color="#ffffff"; }
     else if (event.target.url=="getLegAdjust") { legAdjust=event.target.responseText; doDisplay(); } } }
