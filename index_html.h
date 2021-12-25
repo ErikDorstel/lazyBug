@@ -27,7 +27,7 @@ td     { text-align:right; }
 function lazyBuginit() {
   ajaxObj=[]; tiltX=0; tiltY=0; tiltD=0; tiltXY=0; dist=9999; legAdjust="0,0,0,0,0,0,"; sweepArray=[];
   getSensor(1); getSensorID=window.setInterval("getSensor(1);",1000); getLegAdjust();
-  getSweep(); getSweepID=window.setInterval("getSweep();",10000);
+  getSweep(); getSweepID=window.setInterval("getSweep();",2000);
   doDisplay(); }
   
 function doDisplay() {
@@ -74,19 +74,17 @@ function displaySweep() {
   xx=id('sweepFrame').width; yy=id('sweepFrame').height;
   sweepFrame=id('sweepFrame').getContext('2d');
   sweepFrame.clearRect(0,0,xx,yy);
-  sweepFrame.fillStyle="black";
-  sweepFrame.lineWidth=1;
+  sweepFrame.fillStyle="gray"; sweepFrame.lineWidth=1;
+  for (a=0.1;a<=1;a+=0.1) { sweepFrame.beginPath(); sweepFrame.arc(xx/2,yy,(yy*a)-3,Math.PI,2*Math.PI); sweepFrame.stroke(); }
+  sweepFrame.fillStyle="black"; sweepFrame.lineWidth=3;
   sweepFrame.beginPath();
-  sweepFrame.arc(xx/2,yy,yy-3,Math.PI,2*Math.PI);
-  sweepFrame.stroke();
-  sweepFrame.lineWidth=3;
   for (a=0;a<sweepArray.length;a++) {
     r=mapValue(sweepArray[a],0,1000,0,yy-3);
     w=mapValue(a,0,sweepArray.length-1,2*Math.PI,Math.PI);
-    t=Math.PI/sweepArray.length/2;
-    sweepFrame.beginPath();
-    sweepFrame.arc(xx/2,yy,r,w-t,w+t);
-    sweepFrame.stroke(); } }
+    x=(xx/2)+(Math.cos(w)*r); y=(yy)+(Math.sin(w)*r);
+    if (a==0) { sweepFrame.moveTo(x,y); }
+    else if (sweepArray[a-1]<=1000 & sweepArray[a]<=1000) { sweepFrame.lineTo(x,y); }
+    else { sweepFrame.moveTo(x,y); } } sweepFrame.stroke(); }
 
 function requestAJAX(value) {
   ajaxObj[value]=new XMLHttpRequest; ajaxObj[value].url=value; ajaxObj[value].open("GET",value,true);
