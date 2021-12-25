@@ -25,8 +25,9 @@ td     { text-align:right; }
 <script>
 
 function lazyBuginit() {
-  ajaxObj=[]; tiltX=0; tiltY=0; tiltD=0; tiltXY=0; dist=9999; legAdjust="0,0,0,0,0,0,";
+  ajaxObj=[]; tiltX=0; tiltY=0; tiltD=0; tiltXY=0; dist=9999; legAdjust="0,0,0,0,0,0,"; sweepArray=[];
   getSensor(1); getSensorID=window.setInterval("getSensor(1);",1000); getLegAdjust();
+  getSweep(); getSweepID=window.setInterval("getSweep();",10000);
   doDisplay(); }
   
 function doDisplay() {
@@ -58,6 +59,7 @@ function goRearB() { requestAJAX('goRearB'); }
 function getTilt(value) { requestAJAX('getTilt,'+value); }
 function getDist(value) { requestAJAX('getDist,'+value); }
 function getSensor(value) { requestAJAX('getSensor,'+value); }
+function getSweep() { requestAJAX('getSweep'); }
 function getLegAdjust() { requestAJAX('getLegAdjust'); }
 function loadLegAdjust() { id("loaBtn").style.color="#888888"; requestAJAX('loadLegAdjust'); }
 function saveLegAdjust() { id("savBtn").style.color="#888888"; requestAJAX('saveLegAdjust'); }
@@ -67,6 +69,24 @@ function setLegAdjust(value) {
 function calibrateTilt() {
   id("calBtn").style.color="#888888"; id("calBtn").onclick=false;
   window.clearInterval(getSensorID); requestAJAX('calibrateTilt'); }
+
+function displaySweep() {
+  xx=id('sweepFrame').width; yy=id('sweepFrame').height;
+  sweepFrame=id('sweepFrame').getContext('2d');
+  sweepFrame.clearRect(0,0,xx,yy);
+  sweepFrame.fillStyle="black";
+  sweepFrame.lineWidth=1;
+  sweepFrame.beginPath();
+  sweepFrame.arc(xx/2,yy,yy-3,Math.PI,2*Math.PI);
+  sweepFrame.stroke();
+  sweepFrame.lineWidth=3;
+  for (a=0;a<sweepArray.length;a++) {
+    r=mapValue(sweepArray[a],0,1000,0,yy-3);
+    w=mapValue(a,0,sweepArray.length-1,2*Math.PI,Math.PI);
+    t=Math.PI/sweepArray.length/2;
+    sweepFrame.beginPath();
+    sweepFrame.arc(xx/2,yy,r,w-t,w+t);
+    sweepFrame.stroke(); } }
 
 function requestAJAX(value) {
   ajaxObj[value]=new XMLHttpRequest; ajaxObj[value].url=value; ajaxObj[value].open("GET",value,true);
@@ -79,11 +99,13 @@ function replyAJAX(event) {
     else if (event.target.url.startsWith("getDist")) { dist=event.target.responseText*1; doDisplay(); }
     else if (event.target.url.startsWith("getSensor")) { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1;
       tiltD=event.target.responseText.split(",")[2]*1; tiltXY=event.target.responseText.split(",")[3]*1; dist=event.target.responseText.split(",")[4]*1; doDisplay(); }
+    else if (event.target.url=="getSweep") { sweepArray=event.target.responseText.split(","); sweepArray.pop(); displaySweep(); }
     else if (event.target.url=="calibrateTilt") { getSensorID=window.setInterval("getSensor(1);",1000); id("calBtn").onclick=calibrateTilt; id("calBtn").style.color="#ffffff"; }
     else if (event.target.url=="loadLegAdjust") { getLegAdjust(); id("loaBtn").style.color="#ffffff"; }
     else if (event.target.url=="saveLegAdjust") { id("savBtn").style.color="#ffffff"; }
     else if (event.target.url=="getLegAdjust") { legAdjust=event.target.responseText; doDisplay(); } } }
 
+function mapValue(value,inMin,inMax,outMin,outMax) { return (value-inMin)*(outMax-outMin)/(inMax-inMin)+outMin; }
 function id(id) { return document.getElementById(id); }
 
 </script></head><body onload="lazyBuginit();">
@@ -99,6 +121,7 @@ function id(id) { return document.getElementById(id); }
 <div><div class="x2" id="tiltD"></div>
      <div class="x2" id="tiltXY"></div></div>
 <div><div class="x1" id="dist"></div></div>
+<div><div class="x1"><canvas id="sweepFrame" width="400px" height="200px"></canvas></div></div>
 <div><div class="x1" id="calBtn" onclick="calibrateTilt();">Calibrate Tilt Sensor</div></div>
 <div><div class="x1" id="loaBtn" onclick="loadLegAdjust();">Load Leg Adjust Values</div></div>
 <div><div class="x1" id="savBtn" onclick="saveLegAdjust();">Save Leg Adjust Values</div></div>
