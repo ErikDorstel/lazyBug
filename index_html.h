@@ -74,12 +74,12 @@ function displaySweep() {
   xx=id('sweepFrame').width; yy=id('sweepFrame').height;
   sweepFrame=id('sweepFrame').getContext('2d');
   sweepFrame.clearRect(0,0,xx,yy);
-  sweepFrame.fillStyle="gray"; sweepFrame.lineWidth=1;
-  for (a=0.1;a<=1;a+=0.1) { sweepFrame.beginPath(); sweepFrame.arc(xx/2,yy,(yy*a)-3,Math.PI,2*Math.PI); sweepFrame.stroke(); }
-  sweepFrame.fillStyle="black"; sweepFrame.lineWidth=3;
+  sweepFrame.strokeStyle="black"; sweepFrame.lineWidth=1;
+  for (a=0.1;a<=1;a+=0.1) { sweepFrame.beginPath(); sweepFrame.arc(xx/2,yy,(yy*a)-1,Math.PI,2*Math.PI); sweepFrame.stroke(); }
+  sweepFrame.strokeStyle="black"; sweepFrame.lineWidth=3;
   sweepFrame.beginPath();
   for (a=0;a<sweepArray.length;a++) {
-    r=mapValue(sweepArray[a],0,1000,0,yy-3);
+    r=mapValue(sweepArray[a],0,1000,0,yy-1);
     w=mapValue(a,0,sweepArray.length-1,2*Math.PI,Math.PI);
     x=(xx/2)+(Math.cos(w)*r); y=(yy)+(Math.sin(w)*r);
     if (a==0) { sweepFrame.moveTo(x,y); }
