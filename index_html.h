@@ -58,6 +58,7 @@ function goRearA() { requestAJAX('goRearA'); }
 function goRearB() { requestAJAX('goRearB'); }
 function getSensor() { requestAJAX('getSensor'); }
 function getSweep() { requestAJAX('getSweep'); }
+function setSweep(value) { requestAJAX('setSweep,'+value); }
 function calibrateTilt() { id("calBtn").style.color="#888888"; requestAJAX('calibrateTilt'); }
 function getLegAdjust() { requestAJAX('getLegAdjust'); }
 function loadLegAdjust() { id("loaBtn").style.color="#888888"; requestAJAX('loadLegAdjust'); }
@@ -111,6 +112,8 @@ function id(id) { return document.getElementById(id); }
      <div class="x2" id="tiltXY"></div></div>
 <div><div class="x1" id="dist"></div></div>
 <div><div class="x1"><canvas id="sweepFrame" width="400px" height="200px"></canvas></div></div>
+<div><div class="x2" onclick="setSweep(1);">Sweep On</div>
+     <div class="x2" onclick="setSweep(0);">Sweep Off</div></div>
 <div><div class="x1" id="calBtn" onclick="calibrateTilt();">Calibrate Tilt Sensor</div></div>
 <div><div class="x1" id="loaBtn" onclick="loadLegAdjust();">Load Leg Adjust Values</div></div>
 <div><div class="x1" id="savBtn" onclick="saveLegAdjust();">Save Leg Adjust Values</div></div>

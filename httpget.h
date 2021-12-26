@@ -23,6 +23,8 @@ String httpget(String request) {
   else if (request.indexOf("/getSweep")>=0) {
     for (int a=0;a<=dist.sweepSteps;a++) { response+=String(dist.valueArray[a]) + ","; } }
 
+  else if (request.indexOf("/setSweep")>=0) { int a=request.indexOf(",")+1; setSweep(request.substring(a).toInt()); }
+
   else if (request.indexOf("/calibrateTilt")>=0) { calibrateTilt(); }
 
   else if (request.indexOf("/getLegAdjust")>=0) {
