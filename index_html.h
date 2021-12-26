@@ -58,15 +58,11 @@ function goRearA() { requestAJAX('goRearA'); }
 function goRearB() { requestAJAX('goRearB'); }
 function getSensor() { requestAJAX('getSensor'); }
 function getSweep() { requestAJAX('getSweep'); }
+function calibrateTilt() { id("calBtn").style.color="#888888"; requestAJAX('calibrateTilt'); }
 function getLegAdjust() { requestAJAX('getLegAdjust'); }
 function loadLegAdjust() { id("loaBtn").style.color="#888888"; requestAJAX('loadLegAdjust'); }
 function saveLegAdjust() { id("savBtn").style.color="#888888"; requestAJAX('saveLegAdjust'); }
-function setLegAdjust(value) {
-  requestAJAX('setLegAdjust,'+id("xSel").selectedIndex+','+id("ySel").selectedIndex+','+value);
-  getLegAdjust(); }
-function calibrateTilt() {
-  id("calBtn").style.color="#888888"; id("calBtn").onclick=false;
-  window.clearInterval(getSensorID); requestAJAX('calibrateTilt'); }
+function setLegAdjust(value) { requestAJAX('setLegAdjust,'+id("xSel").selectedIndex+','+id("ySel").selectedIndex+','+value); getLegAdjust(); }
 
 function displaySweep() {
   xx=id('sweepFrame').width; yy=id('sweepFrame').height;
@@ -93,7 +89,7 @@ function replyAJAX(event) {
     if (event.target.url=="getSensor") { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1;
       tiltD=event.target.responseText.split(",")[2]*1; tiltXY=event.target.responseText.split(",")[3]*1; dist=event.target.responseText.split(",")[4]*1; doDisplay(); }
     else if (event.target.url=="getSweep") { sweepArray=event.target.responseText.split(","); sweepArray.pop(); displaySweep(); }
-    else if (event.target.url=="calibrateTilt") { getSensorID=window.setInterval("getSensor();",1000); id("calBtn").onclick=calibrateTilt; id("calBtn").style.color="#ffffff"; }
+    else if (event.target.url=="calibrateTilt") { id("calBtn").style.color="#ffffff"; }
     else if (event.target.url=="loadLegAdjust") { getLegAdjust(); id("loaBtn").style.color="#ffffff"; }
     else if (event.target.url=="saveLegAdjust") { id("savBtn").style.color="#ffffff"; }
     else if (event.target.url=="getLegAdjust") { legAdjust=event.target.responseText; doDisplay(); } } }
