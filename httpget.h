@@ -17,21 +17,13 @@ String httpget(String request) {
   else if (request.indexOf("/goRearA")>=0) { goRearA(); }
   else if (request.indexOf("/goRearB")>=0) { goRearB(); }
 
-  else if (request.indexOf("/getTilt")>=0) {
-    int a=request.indexOf(",")+1; getTilt(request.substring(a).toInt());
-    response+=String(tilt.x) + "," + String(tilt.y) + "," + String(tilt.d) + "," + String(tilt.xy) + ","; }
-
-  else if (request.indexOf("/getDist")>=0) { response+=String(dist.Value) + ","; }
-
   else if (request.indexOf("/getSensor")>=0) {
-    int a=request.indexOf(",")+1;
-    getTilt(request.substring(a).toInt());
     response+=String(tilt.x) + "," + String(tilt.y) + "," + String(tilt.d) + "," + String(tilt.xy) + "," + String(dist.Value) + ","; }
 
   else if (request.indexOf("/getSweep")>=0) {
     for (int a=0;a<=dist.sweepSteps;a++) { response+=String(dist.valueArray[a]) + ","; } }
 
-  else if (request.indexOf("/calibrateTilt")>=0) { calibrateTilt(500); }
+  else if (request.indexOf("/calibrateTilt")>=0) { calibrateTilt(); }
 
   else if (request.indexOf("/getLegAdjust")>=0) {
     for (int x=0;x<2;x++) { for (int y=0;y<3;y++) {

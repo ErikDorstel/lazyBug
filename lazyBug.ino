@@ -15,4 +15,4 @@ void setup() {
   initDist();
   initBody(); }
 
-void loop() { httpWorker(); dnsWorker(); bodyWorker(); distWorker(); }
+void loop() { httpWorker(); dnsWorker(); bodyWorker(); distWorker(); tiltWorker(); }
