@@ -25,7 +25,7 @@ void distWorker() {
       int distTemp=vl53l0x.readRangeResult();
       if (vl53l0x.readRangeStatus()!=4) { dist.Value=distTemp; } else { dist.Value=9999; } }
     int sweepStep=map(dist.servoCurrent,dist.servoRight,dist.servoLeft,0,dist.sweepSteps); dist.valueArray[sweepStep]=dist.Value;
-    if (dist.sweepActive==false) { dist.valueArray[sweepStep-1]=dist.Value; dist.valueArray[sweepStep+1]=dist.Value; }
+    if (dist.sweepActive==false) { for (int a=-5;a<=5;a++) { dist.valueArray[sweepStep+a]=dist.Value; } }
     else { dist.servoCurrent+=dist.sweepDelta*dist.sweepDir; pwmLinks.setPWM(11,0,dist.servoCurrent);
       if (dist.sweepDir==1 & dist.servoCurrent>=dist.servoLeft) { dist.sweepDir=-1; }
       else if (dist.sweepDir==-1 & dist.servoCurrent<=dist.servoRight) { dist.sweepDir=1; } } } }
