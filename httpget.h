@@ -21,7 +21,7 @@ String httpget(String request) {
     response+=String(tilt.x) + "," + String(tilt.y) + "," + String(tilt.d) + "," + String(tilt.xy) + "," + String(dist.Value) + ","; }
 
   else if (request.indexOf("/getSweep")>=0) {
-    for (int a=0;a<=dist.sweepSteps;a++) { response+=String(dist.valueArray[a]) + ","; } }
+    for (int a=0;a<=40;a++) { response+=String(dist.valueArray[a]) + ","; } }
 
   else if (request.indexOf("/setSweep")>=0) { int a=request.indexOf(",")+1; setSweep(request.substring(a).toInt()); }
 

@@ -73,9 +73,9 @@ function displaySweep() {
   for (a=0.1;a<=1;a+=0.1) { sweepFrame.beginPath(); sweepFrame.arc(xx/2,yy,(yy*a)-1,Math.PI,2*Math.PI); sweepFrame.stroke(); }
   sweepFrame.strokeStyle="black"; sweepFrame.lineWidth=3;
   sweepFrame.beginPath();
-  for (a=0;a<sweepArray.length;a++) {
+  for (a=0;a<=40;a++) {
     r=mapValue(sweepArray[a],0,1000,0,yy-1);
-    w=mapValue(a,0,sweepArray.length-1,2*Math.PI,Math.PI);
+    w=mapValue(a,0,40,2*Math.PI,Math.PI);
     x=(xx/2)+(Math.cos(w)*r); y=(yy)+(Math.sin(w)*r);
     if (a==0) { sweepFrame.moveTo(x,y); }
     else if (sweepArray[a-1]<=1000 & sweepArray[a]<=1000) { sweepFrame.lineTo(x,y); }
@@ -89,7 +89,7 @@ function replyAJAX(event) {
   if (event.target.status==200) {
     if (event.target.url=="getSensor") { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1;
       tiltD=event.target.responseText.split(",")[2]*1; tiltXY=event.target.responseText.split(",")[3]*1; dist=event.target.responseText.split(",")[4]*1; doDisplay(); }
-    else if (event.target.url=="getSweep") { sweepArray=event.target.responseText.split(","); sweepArray.pop(); displaySweep(); }
+    else if (event.target.url=="getSweep") { sweepArray=event.target.responseText.split(","); displaySweep(); }
     else if (event.target.url=="calibrateTilt") { id("calBtn").style.color="#ffffff"; }
     else if (event.target.url=="loadLegAdjust") { getLegAdjust(); id("loaBtn").style.color="#ffffff"; }
     else if (event.target.url=="saveLegAdjust") { id("savBtn").style.color="#ffffff"; }
