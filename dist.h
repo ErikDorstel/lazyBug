@@ -3,20 +3,14 @@
 Adafruit_VL53L0X vl53l0x=Adafruit_VL53L0X();
 
 struct distStruct {
-  int servoRight;
-  int servoMid;
-  int servoLeft;
-  int sweepDir;
-  int sweepStep;
-  bool sweepActive;
-  int Value;
-  short valueArray[41];
-  bool valueUpdate; };
+  int servoRight; int servoMid; int servoLeft;
+  int sweepDir; int sweepStep; bool sweepActive;
+  int Value; short valueArray[41]; bool valueUpdate; };
 
 struct distStruct dist;
 
 const byte xshutPin=19; //const byte intPin=18;
-unsigned long distTimer;
+unsigned long distTimer=millis()+100;;
 
 void distWorker() {
   if (millis()>=distTimer) { distTimer=millis()+50;
@@ -37,7 +31,7 @@ void initDist() {
   pinMode(xshutPin,OUTPUT); digitalWrite(xshutPin,HIGH); //pinMode(intPin,INPUT_PULLUP);
   //VL53L0X_SENSE_DEFAULT; VL53L0X_SENSE_LONG_RANGE; VL53L0X_SENSE_HIGH_SPEED; VL53L0X_SENSE_HIGH_ACCURACY
   vl53l0x.begin(0x29,false,&I2Ctwo,Adafruit_VL53L0X::VL53L0X_SENSE_LONG_RANGE); //true for debug
-  distTimer=millis()+100; vl53l0x.startRangeContinuous(45);
+  vl53l0x.startRangeContinuous(45);
   int servoFreq=50;
   dist.servoRight=4096/(1000/servoFreq)*0.75;
   dist.servoMid=4096/(1000/servoFreq)*1.5;

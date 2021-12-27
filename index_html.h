@@ -25,17 +25,16 @@ td     { text-align:right; }
 <script>
 
 function lazyBuginit() {
-  ajaxObj=[]; tiltX=0; tiltY=0; tiltD=0; tiltXY=0; dist=9999; legAdjust="0,0,0,0,0,0,";
-  getSensor(); getSensorID=window.setInterval("getSensor();",1000);
-  openStream(); getLegAdjust();
+  ajaxObj=[]; tiltX=0; tiltY=0; tiltD=0; tiltXY=0;
+  getTilt(); getTiltID=window.setInterval("getTilt();",1000);
+  openStream(); legAdjust="0,0,0,0,0,0,"; getLegAdjust();
   doDisplay(); }
   
 function doDisplay() {
   id("tiltX").innerHTML="X: "+tiltX+" &#176;";
   id("tiltY").innerHTML="Y: "+tiltY+" &#176;";
-  id("tiltD").innerHTML="Dir: "+tiltD+" &#176;";
+  id("tiltD").innerHTML="Direction: "+tiltD+" &#176;";
   id("tiltXY").innerHTML="Tilt: "+tiltXY+" &#176;";
-  id("dist").innerHTML="Dist: "+dist+" mm";
   html="<table><tr><td> </td><td>Front</td><td>Middle</td><td>Rear</td></tr>";
   html+="<tr><td>Right</td><td>"+legAdjust.split(",")[3]+"</td><td>"+legAdjust.split(",")[4]+"</td><td>"+legAdjust.split(",")[5]+"</td></tr>";
   html+="<tr><td>Left</td><td>"+legAdjust.split(",")[0]+"</td><td>"+legAdjust.split(",")[1]+"</td><td>"+legAdjust.split(",")[2]+"</td></tr></table>";
@@ -62,7 +61,7 @@ function goFrontB() { requestAJAX('goFrontB'); }
 function goFrontC() { requestAJAX('goFrontC'); }
 function goRearA() { requestAJAX('goRearA'); }
 function goRearB() { requestAJAX('goRearB'); }
-function getSensor() { requestAJAX('getSensor'); }
+function getTilt() { requestAJAX('getTilt'); }
 function setSweep(value) { requestAJAX('setSweep,'+value); }
 function calibrateTilt() { id("calBtn").style.color="#888888"; requestAJAX('calibrateTilt'); }
 function getLegAdjust() { requestAJAX('getLegAdjust'); }
@@ -71,6 +70,7 @@ function saveLegAdjust() { id("savBtn").style.color="#888888"; requestAJAX('save
 function setLegAdjust(value) { requestAJAX('setLegAdjust,'+id("xSel").selectedIndex+','+id("ySel").selectedIndex+','+value); getLegAdjust(); }
 
 function doDisplaySweep() {
+  id("dist").innerHTML="Distance: "+sweepArray[20]+" mm";
   xx=id('sweepFrame').width; yy=id('sweepFrame').height;
   sweepFrame=id('sweepFrame').getContext('2d');
   sweepFrame.clearRect(0,0,xx,yy);
@@ -92,8 +92,8 @@ function requestAJAX(value) {
 
 function replyAJAX(event) {
   if (event.target.status==200) {
-    if (event.target.url=="getSensor") { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1;
-      tiltD=event.target.responseText.split(",")[2]*1; tiltXY=event.target.responseText.split(",")[3]*1; dist=event.target.responseText.split(",")[4]*1; doDisplay(); }
+    if (event.target.url=="getTilt") { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1;
+      tiltD=event.target.responseText.split(",")[2]*1; tiltXY=event.target.responseText.split(",")[3]*1; doDisplay(); }
     else if (event.target.url=="calibrateTilt") { id("calBtn").style.color="#ffffff"; }
     else if (event.target.url=="loadLegAdjust") { getLegAdjust(); id("loaBtn").style.color="#ffffff"; }
     else if (event.target.url=="saveLegAdjust") { id("savBtn").style.color="#ffffff"; }
@@ -111,10 +111,10 @@ function id(id) { return document.getElementById(id); }
 
 <div>
 <div><div class="x2" id="tiltX"></div>
-     <div class="x2" id="tiltY"></div></div>
-<div><div class="x2" id="tiltD"></div>
+     <div class="x2" id="tiltD"></div></div>
+<div><div class="x2" id="tiltY"></div>
      <div class="x2" id="tiltXY"></div></div>
-<div><div class="x1" id="dist"></div></div>
+<div><div class="x1" id="dist">Distance: 9999 mm</div></div>
 <div><div class="x1"><canvas id="sweepFrame" width="400px" height="200px"></canvas></div></div>
 <div><div class="x2" onclick="setSweep(1);">Sweep On</div>
      <div class="x2" onclick="setSweep(0);">Sweep Off</div></div>

@@ -7,7 +7,7 @@ Adafruit_MPU6050 mpu;
 
 struct tiltStruct { float x; float y; float d; float xy; float ax; float ay; float az; float cax; float cay; float caz; };
 struct tiltStruct tilt;
-unsigned long tiltTimer; int tiltCalibrateCount;
+unsigned long tiltTimer=millis()+100;; int tiltCalibrateCount=0;
 const float RADtoDEG=57.29577951308232;
 
 float wrap180(float value) {
@@ -34,5 +34,4 @@ void initTilt() {
   mpu.setAccelerometerRange(MPU6050_RANGE_2_G); //2,4,8,16
   mpu.setGyroRange(MPU6050_RANGE_250_DEG);      //250,500,1000,2000
   mpu.setFilterBandwidth(MPU6050_BAND_5_HZ);    //5,10,21,44,94,184,260
-  tilt.ax=0; tilt.ay=0; tilt.az=0; tilt.cax=0; tilt.cay=0; tilt.caz=0;
-  tiltTimer=millis()+100; tiltCalibrateCount=0; }
+  tilt.ax=0; tilt.ay=0; tilt.az=0; tilt.cax=0; tilt.cay=0; tilt.caz=0; }
