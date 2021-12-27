@@ -7,12 +7,14 @@ boolean debug=true;
 #include "WLAN.h"
 #include "DNS.h"
 #include "HTTP.h"
+#include "WEBSOCKET.h"
 
 void setup() {
   if (debug) { Serial.begin(115200); }
   initWLAN();
   initTilt();
   initDist();
-  initBody(); }
+  initBody();
+  initWEBSOCKET(); }
 
-void loop() { httpWorker(); dnsWorker(); bodyWorker(); distWorker(); tiltWorker(); }
+void loop() { httpWorker(); dnsWorker(); bodyWorker(); distWorker(); tiltWorker(); websocketWorker(); }

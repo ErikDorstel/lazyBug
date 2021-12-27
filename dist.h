@@ -10,7 +10,8 @@ struct distStruct {
   int sweepStep;
   bool sweepActive;
   int Value;
-  int valueArray[41]; };
+  short valueArray[41];
+  bool valueUpdate; };
 
 struct distStruct dist;
 
@@ -22,15 +23,14 @@ void distWorker() {
     if (vl53l0x.isRangeComplete()) {
       int distTemp=vl53l0x.readRangeResult();
       if (vl53l0x.readRangeStatus()!=4) { dist.Value=distTemp; } else { dist.Value=9999; } }
-    dist.valueArray[dist.sweepStep]=dist.Value;
-    if (dist.sweepActive==false) { for (int a=-5;a<=5;a++) { dist.valueArray[dist.sweepStep+a]=dist.Value; } }
-    else { dist.sweepStep+=dist.sweepDir; int servoCurrent=map(dist.sweepStep,0,40,dist.servoRight,dist.servoLeft); pwmLinks.setPWM(11,0,servoCurrent);
-      if (dist.sweepStep==40) { dist.sweepDir=-1; } else if (dist.sweepStep==0) { dist.sweepDir=1; } } } }
+    if (dist.sweepActive==false) { for (int a=15;a<=25;a++) { dist.valueArray[a]=dist.Value; } dist.sweepStep+=dist.sweepDir; }
+    else { dist.valueArray[dist.sweepStep]=dist.Value; dist.sweepStep+=dist.sweepDir;
+      pwmLinks.setPWM(11,0,map(dist.sweepStep,0,40,dist.servoRight,dist.servoLeft)); }
+    if (dist.sweepStep==0) { dist.sweepDir=1; dist.valueUpdate=true; } else if (dist.sweepStep==40) { dist.sweepDir=-1; dist.valueUpdate=true; } } }
 
 void setSweep(bool sweepActive) {
-  if (sweepActive==false) {
-    dist.sweepStep=20; pwmLinks.setPWM(11,0,dist.servoMid);
-    for (int a=0;a<=40;a++) { dist.valueArray[a]=9999; } }
+  for (int a=0;a<=40;a++) { dist.valueArray[a]=9999; }
+  dist.sweepStep=20; pwmLinks.setPWM(11,0,dist.servoMid);
   dist.sweepActive=sweepActive; }
 
 void initDist() {
@@ -44,5 +44,6 @@ void initDist() {
   dist.servoLeft=4096/(1000/servoFreq)*2.25;
   dist.sweepDir=1;
   dist.sweepStep=20;
+  dist.valueUpdate=false;
   for (int a=0;a<=40;a++) { dist.valueArray[a]=9999; }
   setSweep(true); }
