@@ -13,12 +13,12 @@ uint8_t fifoBuffer[64]; Quaternion q; VectorFloat gravity; float ypr[3];
 void calibrateTilt() { mpu.CalibrateAccel(6); mpu.CalibrateGyro(6); mpu.PrintActiveOffsets(); }
 
 void initTilt() {
-  I2Ctwo.begin(17,16,400000); //SDA 17,SCL 16, 400000 Hz
+  I2Ctwo.begin(17,16,400000); //SDA 17,SCL 16, 400 kHz
   mpu.initialize();
   mpu.dmpInitialize();
-  //mpu.setXGyroOffset(27); mpu.setYGyroOffset(-10); mpu.setZGyroOffset(53);
-  //mpu.setXAccelOffset(2400); mpu.setYAccelOffset(169); mpu.setZAccelOffset(2270);
-  calibrateTilt();
+  //mpu.setXGyroOffset(28); mpu.setYGyroOffset(-12); mpu.setZGyroOffset(56);
+  //mpu.setXAccelOffset(2401); mpu.setYAccelOffset(163); mpu.setZAccelOffset(2271);
+  calibrateTilt(); calibrateTilt();
   mpu.setDMPEnabled(true); }
 
 void tiltWorker() {
