@@ -25,15 +25,15 @@ td     { text-align:right; }
 <script>
 
 function lazyBuginit() {
-  ajaxObj=[]; tiltYaw=0; tiltRoll=0; tiltPitch=0; tiltD=0; tiltXY=0;
+  ajaxObj=[]; tiltX=0; tiltY=0; tiltZ=0; tiltD=0; tiltXY=0;
   getTilt(); getTiltID=window.setInterval("getTilt();",1000);
   openStream(); legAdjust="0,0,0,0,0,0,"; getLegAdjust();
   doDisplay(); }
   
 function doDisplay() {
-  id("tiltYaw").innerHTML="Yaw: "+tiltYaw+" &#176;";
-  id("tiltRoll").innerHTML="Roll: "+tiltRoll+" &#176;";
-  id("tiltPitch").innerHTML="Pitch: "+tiltPitch+" &#176;";
+  id("tiltX").innerHTML="X: "+tiltX+" &#176;";
+  id("tiltY").innerHTML="Y: "+tiltY+" &#176;";
+  id("tiltZ").innerHTML="Z: "+tiltZ+" &#176;";
   id("tiltD").innerHTML="Direction: "+tiltD+" &#176;";
   id("tiltXY").innerHTML="Tilt: "+tiltXY+" &#176;";
   html="<table><tr><td> </td><td>Front</td><td>Middle</td><td>Rear</td></tr>";
@@ -93,7 +93,7 @@ function requestAJAX(value) {
 
 function replyAJAX(event) {
   if (event.target.status==200) {
-    if (event.target.url=="getTilt") { tiltYaw=event.target.responseText.split(",")[0]*1; tiltRoll=event.target.responseText.split(",")[1]*1; tiltPitch=event.target.responseText.split(",")[2]*1;
+    if (event.target.url=="getTilt") { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1; tiltZ=event.target.responseText.split(",")[2]*1;
       tiltD=event.target.responseText.split(",")[3]*1; tiltXY=event.target.responseText.split(",")[4]*1; doDisplay(); }
     else if (event.target.url=="calibrateTilt") { id("calBtn").style.color="#ffffff"; }
     else if (event.target.url=="loadLegAdjust") { getLegAdjust(); id("loaBtn").style.color="#ffffff"; }
@@ -111,9 +111,9 @@ function id(id) { return document.getElementById(id); }
 <div class="x1" onclick="location.replace('/chooseAP');">Choose WLAN AP</div></div>
 
 <div>
-<div><div class="x3" id="tiltYaw"></div>
-     <div class="x3" id="tiltRoll"></div>
-     <div class="x3" id="tiltPitch"></div></div>
+<div><div class="x3" id="tiltX"></div>
+     <div class="x3" id="tiltY"></div>
+     <div class="x3" id="tiltZ"></div></div>
 <div><div class="x2" id="tiltD"></div>
      <div class="x2" id="tiltXY"></div></div>
 <div><div class="x1" id="dist">Distance: 9999 mm</div></div>

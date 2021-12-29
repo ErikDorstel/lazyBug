@@ -18,7 +18,7 @@ String httpget(String request) {
   else if (request.indexOf("/goRearB")>=0) { goRearB(); }
 
   else if (request.indexOf("/getTilt")>=0) {
-    response+=String(tilt.yaw) + "," + String(tilt.roll) + "," + String(tilt.pitch) + "," + String(tilt.d) + "," + String(tilt.xy) + ","; }
+    response+=String(tilt.x) + "," + String(tilt.y) + "," + String(tilt.z) + "," + String(tilt.d) + "," + String(tilt.xy) + ","; }
 
   else if (request.indexOf("/setSweep")>=0) { int a=request.indexOf(",")+1; setSweep(request.substring(a).toInt()); }
 
