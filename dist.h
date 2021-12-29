@@ -10,7 +10,7 @@ struct distStruct {
 struct distStruct dist;
 
 const byte xshutPin=19; //const byte intPin=18;
-unsigned long distTimer=millis()+100;;
+unsigned long distTimer=millis()+100;
 
 void distWorker() {
   if (millis()>=distTimer) { distTimer=millis()+50;

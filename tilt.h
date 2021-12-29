@@ -1,37 +1,33 @@
-#include <Adafruit_MPU6050.h>
-#include <Adafruit_Sensor.h>
-#include <Wire.h>
+//get library from https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/I2Cdev and
+//get library from https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/MPU6050
+#include "MPU6050_6Axis_MotionApps612.h"
 
 TwoWire I2Ctwo=TwoWire(1);
-Adafruit_MPU6050 mpu;
+MPU6050 mpu(0x68,&I2Ctwo);
 
-struct tiltStruct { float x; float y; float d; float xy; float ax; float ay; float az; float cax; float cay; float caz; };
+struct tiltStruct { float yaw; float roll; float pitch; float d; float xy; };
 struct tiltStruct tilt;
-unsigned long tiltTimer=millis()+100;; int tiltCalibrateCount=0;
-const float RADtoDEG=57.29577951308232;
+unsigned long tiltTimer=millis()+100;
+uint8_t fifoBuffer[64]; Quaternion q; VectorFloat gravity; float yrp[3];
 
-float wrap180(float value) {
-  while (value>+180) { value-=360; }
-  while (value<-180) { value+=360; }
-  return value; }
-
-void calibrateTilt() { tilt.cax=tilt.ax; tilt.cay=tilt.ay; tilt.caz=tilt.az-9.81; }
-
-void tiltWorker() {
-  if (millis()>=tiltTimer) { tiltTimer=millis()+100; tiltCalibrateCount++;
-    if (tiltCalibrateCount==50) { calibrateTilt(); }
-    sensors_event_t a,g,t; mpu.getEvent(&a,&g,&t);
-    tilt.ax=(tilt.ax+a.acceleration.x)/2; tilt.ay=(tilt.ay+a.acceleration.y)/2; tilt.az=(tilt.az+a.acceleration.z)/2;
-    float ax=tilt.ax-tilt.cax; float ay=tilt.ay-tilt.cay; float az=tilt.az-tilt.caz;
-    tilt.x=wrap180((+atan2(ay,sqrt(az*az+ax*ax)))*RADtoDEG);
-    tilt.y=wrap180((-atan2(ax,sqrt(az*az+ay*ay)))*RADtoDEG);
-    tilt.d=wrap180(atan2(ax,ay)*RADtoDEG)+180;
-    tilt.xy=sqrt(ax*ax+ay*ay)/9.81*90; } }
+void calibrateTilt() { mpu.CalibrateAccel(6); mpu.CalibrateGyro(6); mpu.PrintActiveOffsets(); }
 
 void initTilt() {
-  I2Ctwo.begin(17,16); //SDA 17,SCL 16
-  mpu.begin(0x68,&I2Ctwo);
-  mpu.setAccelerometerRange(MPU6050_RANGE_2_G); //2,4,8,16
-  mpu.setGyroRange(MPU6050_RANGE_250_DEG);      //250,500,1000,2000
-  mpu.setFilterBandwidth(MPU6050_BAND_5_HZ);    //5,10,21,44,94,184,260
-  tilt.ax=0; tilt.ay=0; tilt.az=0; tilt.cax=0; tilt.cay=0; tilt.caz=0; }
+  I2Ctwo.begin(17,16);
+  I2Ctwo.setClock(400000);
+  mpu.initialize();
+  mpu.dmpInitialize();
+  //mpu.setXGyroOffset(27); mpu.setYGyroOffset(-10); mpu.setZGyroOffset(53);
+  //mpu.setXAccelOffset(2400); mpu.setYAccelOffset(169); mpu.setZAccelOffset(2270);
+  calibrateTilt();
+  mpu.setDMPEnabled(true); }
+
+void tiltWorker() {
+  if (millis()>=tiltTimer) { tiltTimer=millis()+100;
+    if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) {
+      mpu.dmpGetQuaternion(&q,fifoBuffer);
+      mpu.dmpGetGravity(&gravity,&q);
+      mpu.dmpGetYawPitchRoll(yrp,&q,&gravity);
+      tilt.yaw=yrp[0]*180/M_PI; tilt.roll=yrp[1]*180/M_PI; tilt.pitch=yrp[2]*180/M_PI;
+      tilt.d=(atan2(yrp[1],yrp[2])*180/M_PI)+180;
+      tilt.xy=sqrt(yrp[1]*yrp[1]+yrp[2]*yrp[2])*180/M_PI; } } }
