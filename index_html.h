@@ -65,6 +65,8 @@ function goRearB() { requestAJAX('goRearB'); }
 function getTilt() { requestAJAX('getTilt'); }
 function setSweep(value) { requestAJAX('setSweep,'+value); }
 function calibrateTilt() { id("calBtn").style.color="#888888"; requestAJAX('calibrateTilt'); }
+function loadTiltCalibration() { id("calLoadBtn").style.color="#888888"; requestAJAX('loadTiltCalibration'); }
+function saveTiltCalibration() { id("calSaveBtn").style.color="#888888"; requestAJAX('saveTiltCalibration'); }
 function getLegAdjust() { requestAJAX('getLegAdjust'); }
 function loadLegAdjust() { id("loaBtn").style.color="#888888"; requestAJAX('loadLegAdjust'); }
 function saveLegAdjust() { id("savBtn").style.color="#888888"; requestAJAX('saveLegAdjust'); }
@@ -97,6 +99,8 @@ function replyAJAX(event) {
     if (event.target.url=="getTilt") { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1; tiltZ=event.target.responseText.split(",")[2]*1;
       tiltD=event.target.responseText.split(",")[3]*1; tiltXY=event.target.responseText.split(",")[4]*1; doDisplay(); }
     else if (event.target.url=="calibrateTilt") { id("calBtn").style.color="#ffffff"; }
+    else if (event.target.url=="loadTiltCalibration") { id("calLoadBtn").style.color="#ffffff"; }
+    else if (event.target.url=="saveTiltCalibration") { id("calSaveBtn").style.color="#ffffff"; }
     else if (event.target.url=="loadLegAdjust") { getLegAdjust(); id("loaBtn").style.color="#ffffff"; }
     else if (event.target.url=="saveLegAdjust") { id("savBtn").style.color="#ffffff"; }
     else if (event.target.url=="getLegAdjust") { legAdjust=event.target.responseText; doDisplay(); } } }
@@ -121,7 +125,9 @@ function id(id) { return document.getElementById(id); }
 <div><div class="x1"><canvas id="sweepFrame" width="400px" height="200px"></canvas></div></div>
 <div><div class="x2" onclick="setSweep(1);">Sweep On</div>
      <div class="x2" onclick="setSweep(0);">Sweep Off</div></div>
-<div><div class="x1" id="calBtn" onclick="calibrateTilt();">Calibrate Tilt Sensor</div></div>
+<div><div class="x3" id="calLoadBtn" onclick="loadTiltCalibration();">Load</div>
+     <div class="x3" id="calBtn" onclick="calibrateTilt();">Calibrate Tilt Sensor</div>
+     <div class="x3" id="calSaveBtn" onclick="saveTiltCalibration();">Save</div></div>
 <div><div class="x1" id="loaBtn" onclick="loadLegAdjust();">Load Leg Adjust Values</div></div>
 <div><div class="x1" id="savBtn" onclick="saveLegAdjust();">Save Leg Adjust Values</div></div>
 <div><div class="x1" id="adjBtn"></div></div>

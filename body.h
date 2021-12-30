@@ -2,8 +2,6 @@
 #include <Adafruit_PWMServoDriver.h>
 Adafruit_PWMServoDriver pwmLinks=Adafruit_PWMServoDriver(0x40);
 Adafruit_PWMServoDriver pwmRechts=Adafruit_PWMServoDriver(0x41);
-#include <Preferences.h>
-Preferences preferences;
 
 enum {L,R};   // Links, Rechts
 enum {V,M,H}; // Vorne, Mitte, Hinten

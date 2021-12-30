@@ -17,12 +17,14 @@ String httpget(String request) {
   else if (request.indexOf("/goRearA")>=0) { goRearA(); }
   else if (request.indexOf("/goRearB")>=0) { goRearB(); }
 
+  else if (request.indexOf("/calibrateTilt")>=0) { calibrateTilt(); }
+  else if (request.indexOf("/loadTiltCalibration")>=0) { loadTiltCalibration(); }
+  else if (request.indexOf("/saveTiltCalibration")>=0) { saveTiltCalibration(); }
+
   else if (request.indexOf("/getTilt")>=0) {
     response+=String(tilt.x) + "," + String(tilt.y) + "," + String(tilt.z) + "," + String(tilt.d) + "," + String(tilt.xy) + ","; }
 
   else if (request.indexOf("/setSweep")>=0) { int a=request.indexOf(",")+1; setSweep(request.substring(a).toInt()); }
-
-  else if (request.indexOf("/calibrateTilt")>=0) { calibrateTilt(); }
 
   else if (request.indexOf("/getLegAdjust")>=0) {
     for (int x=0;x<2;x++) { for (int y=0;y<3;y++) {
@@ -34,7 +36,6 @@ String httpget(String request) {
     leg.adjustValue[x][y][K]+=z; leg.adjustValue[x][y][F]+=z*-1; setLeg(x,y,Up,1,200); setLeg(x,y,Down,1,1); }
 
   else if (request.indexOf("/loadLegAdjust")>=0) { loadLegAdjust(); }
-
   else if (request.indexOf("/saveLegAdjust")>=0) { saveLegAdjust(); }
 
   // WLAN Choose specific pages
