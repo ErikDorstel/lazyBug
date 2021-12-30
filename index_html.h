@@ -71,7 +71,8 @@ function saveLegAdjust() { id("savBtn").style.color="#888888"; requestAJAX('save
 function setLegAdjust(value) { requestAJAX('setLegAdjust,'+id("xSel").selectedIndex+','+id("ySel").selectedIndex+','+value); getLegAdjust(); }
 
 function doDisplaySweep() {
-  id("dist").innerHTML="Distance: "+sweepArray[20]+" mm";
+  minDist=9999; for (a=17;a<=23;a++) { if (sweepArray[a]<minDist) { minDist=sweepArray[a]; } }
+  id("dist").innerHTML="Distance: "+minDist+" mm";
   xx=id('sweepFrame').width; yy=id('sweepFrame').height;
   sweepFrame=id('sweepFrame').getContext('2d');
   sweepFrame.clearRect(0,0,xx,yy);
