@@ -63,13 +63,13 @@ function goFrontC() { requestAJAX('goFrontC'); }
 function goRearA() { requestAJAX('goRearA'); }
 function goRearB() { requestAJAX('goRearB'); }
 function getTilt() { requestAJAX('getTilt'); }
-function setSweep(value) { requestAJAX('setSweep,'+value); }
-function calibrateTilt() { id("calBtn").style.color="#888888"; requestAJAX('calibrateTilt'); }
-function loadTiltCalibration() { id("calLoadBtn").style.color="#888888"; requestAJAX('loadTiltCalibration'); }
-function saveTiltCalibration() { id("calSaveBtn").style.color="#888888"; requestAJAX('saveTiltCalibration'); }
+function setSweep(value) { if (value==0) { id("disSweepBtn").style.color="#404040"; } else { id("enaSweepBtn").style.color="#404040"; } requestAJAX('setSweep,'+value); }
+function calibrateTilt() { id("calBtn").style.color="#404040"; requestAJAX('calibrateTilt'); }
+function loadTiltCalibration() { id("calLoadBtn").style.color="#404040"; requestAJAX('loadTiltCalibration'); }
+function saveTiltCalibration() { id("calSaveBtn").style.color="#404040"; requestAJAX('saveTiltCalibration'); }
 function getLegAdjust() { requestAJAX('getLegAdjust'); }
-function loadLegAdjust() { id("loaBtn").style.color="#888888"; requestAJAX('loadLegAdjust'); }
-function saveLegAdjust() { id("savBtn").style.color="#888888"; requestAJAX('saveLegAdjust'); }
+function loadLegAdjust() { id("adjLoadBtn").style.color="#404040"; requestAJAX('loadLegAdjust'); }
+function saveLegAdjust() { id("adjSaveBtn").style.color="#404040"; requestAJAX('saveLegAdjust'); }
 function setLegAdjust(value) { requestAJAX('setLegAdjust,'+id("xSel").selectedIndex+','+id("ySel").selectedIndex+','+value); getLegAdjust(); }
 
 function doDisplaySweep() {
@@ -101,8 +101,9 @@ function replyAJAX(event) {
     else if (event.target.url=="calibrateTilt") { id("calBtn").style.color="#ffffff"; }
     else if (event.target.url=="loadTiltCalibration") { id("calLoadBtn").style.color="#ffffff"; }
     else if (event.target.url=="saveTiltCalibration") { id("calSaveBtn").style.color="#ffffff"; }
-    else if (event.target.url=="loadLegAdjust") { getLegAdjust(); id("loaBtn").style.color="#ffffff"; }
-    else if (event.target.url=="saveLegAdjust") { id("savBtn").style.color="#ffffff"; }
+    else if (event.target.url.startsWith("setSweep")) { id("enaSweepBtn").style.color="#ffffff"; id("disSweepBtn").style.color="#ffffff"; }
+    else if (event.target.url=="loadLegAdjust") { getLegAdjust(); id("adjLoadBtn").style.color="#ffffff"; }
+    else if (event.target.url=="saveLegAdjust") { id("adjSaveBtn").style.color="#ffffff"; }
     else if (event.target.url=="getLegAdjust") { legAdjust=event.target.responseText; doDisplay(); } } }
 
 function mapValue(value,inMin,inMax,outMin,outMax) { return (value-inMin)*(outMax-outMin)/(inMax-inMin)+outMin; }
@@ -123,14 +124,15 @@ function id(id) { return document.getElementById(id); }
      <div class="x2" id="tiltXY"></div></div>
 <div><div class="x1" id="dist">Distance: 9999 mm</div></div>
 <div><div class="x1"><canvas id="sweepFrame" width="400px" height="200px"></canvas></div></div>
-<div><div class="x2" onclick="setSweep(1);">Sweep On</div>
-     <div class="x2" onclick="setSweep(0);">Sweep Off</div></div>
+<div><div class="x2" id="enaSweepBtn" onclick="setSweep(1);">Sweep On</div>
+     <div class="x2" id="disSweepBtn" onclick="setSweep(0);">Sweep Off</div></div>
 <div><div class="x3" id="calLoadBtn" onclick="loadTiltCalibration();">Load</div>
      <div class="x3" id="calBtn" onclick="calibrateTilt();">Calibrate Tilt Sensor</div>
      <div class="x3" id="calSaveBtn" onclick="saveTiltCalibration();">Save</div></div>
-<div><div class="x1" id="loaBtn" onclick="loadLegAdjust();">Load Leg Adjust Values</div></div>
-<div><div class="x1" id="savBtn" onclick="saveLegAdjust();">Save Leg Adjust Values</div></div>
 <div><div class="x1" id="adjBtn"></div></div>
+<div><div class="x3">Leg Adjust Values</div>
+     <div class="x3" id="adjLoadBtn" onclick="loadLegAdjust();">Load</div>
+     <div class="x3" id="adjSaveBtn" onclick="saveLegAdjust();">Save</div></div>
 <div><div class="x3">Adjust Leg</div>
      <div class="x3"><select id="xSel">
      <option value="0">Left</option>
