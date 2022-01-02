@@ -17,4 +17,4 @@ void setup() {
   initBody();
   initWEBSOCKET(); }
 
-void loop() { httpWorker(); dnsWorker(); bodyWorker(); distWorker(); tiltWorker(); websocketWorker(); }
+void loop() { httpWorker(); dnsWorker(); bodyWorker(); distWorker(); tiltWorker(); websocketWorker(); balanceWorker(); }

@@ -16,7 +16,9 @@ struct legStruct {
   int rearValue[2][3][3];
   int adjustValue[2][3][3];
   int adjDirValue[2][3][3];
+  int balanceValue[2][3][3];
   int currentValue[2][3][3];
+  int nowValue[2][3][3];
   int channel[2][3][3]; };
 
 struct legStruct leg;
@@ -24,7 +26,7 @@ struct legStruct leg;
 struct queueStruct {
   int steps[100];
   unsigned long timeValue[100];
-  int side[100];
+  int servo[100][3];
   int channel[100];
   float currentValue[100];
   float deltaValue[100];
@@ -32,7 +34,7 @@ struct queueStruct {
 
 struct queueStruct queue;
 
-unsigned long bodyTimer; unsigned long lastTime; int lastSteps; int lastSpeed;
+unsigned long bodyTimer; unsigned long balanceTimer; unsigned long lastTime; int lastSteps; int lastSpeed;
 
 void bodyWorker() {
   if (millis()>=bodyTimer) { bodyTimer=millis()+10;
@@ -40,9 +42,26 @@ void bodyWorker() {
       if (millis()>=queue.timeValue[a]) {
         queue.currentValue[a]+=queue.deltaValue[a]; queue.steps[a]--;
         if (queue.steps[a]==0) { queue.currentValue[a]=queue.targetValue[a];
-          if (debug) { Serial.println("Ready Queue " + String(a) + " " + String(queue.side[a]) + " " + String(queue.channel[a]) + "."); } }
-        if (queue.side[a]==L) { pwmLinks.setPWM(queue.channel[a],0,queue.currentValue[a]); }
-        if (queue.side[a]==R) { pwmRechts.setPWM(queue.channel[a],0,queue.currentValue[a]); } } } } } }
+          if (debug) { Serial.println("Ready Queue " + String(a) + " " + String(queue.servo[a][0]) + " " + String(queue.channel[a]) + "."); } }
+        leg.nowValue[queue.servo[a][0]][queue.servo[a][1]][queue.servo[a][2]]=queue.currentValue[a];
+        if (queue.servo[a][0]==L) { pwmLinks.setPWM(queue.channel[a],0,queue.currentValue[a]+leg.balanceValue[L][queue.servo[a][1]][queue.servo[a][2]]); }
+        if (queue.servo[a][0]==R) { pwmRechts.setPWM(queue.channel[a],0,queue.currentValue[a]+leg.balanceValue[R][queue.servo[a][1]][queue.servo[a][2]]); } } } } } }
+
+void doBalancing() {
+  for (int y=0;y<3;y++) { for (int z=1;z<3;z++) {
+    pwmLinks.setPWM(leg.channel[L][y][z],0,leg.nowValue[L][y][z]+leg.balanceValue[L][y][z]*2);
+    pwmRechts.setPWM(leg.channel[R][y][z],0,leg.nowValue[R][y][z]+leg.balanceValue[R][y][z]*2); } } }
+
+void balanceWorker() {
+  if (millis()>=balanceTimer) { balanceTimer=millis()+100;
+    if (tilt.x>+1) { for (int x=0;x<2;x++) { for (int z=1;z<3;z++) {
+      leg.balanceValue[x][V][z]+=leg.adjDirValue[x][V][z]; leg.balanceValue[x][H][z]-=leg.adjDirValue[x][H][z]; } } doBalancing(); }
+    else if (tilt.x<-1) { for (int x=0;x<2;x++) { for (int z=1;z<3;z++) {
+      leg.balanceValue[x][V][z]-=leg.adjDirValue[x][V][z]; leg.balanceValue[x][H][z]+=leg.adjDirValue[x][H][z]; } } doBalancing(); }
+    if (tilt.y>+1) { for (int y=0;y<3;y++) { for (int z=1;z<3;z++) {
+      leg.balanceValue[L][y][z]-=leg.adjDirValue[L][y][z]; leg.balanceValue[R][y][z]+=leg.adjDirValue[R][y][z]; } } doBalancing(); }
+    else if (tilt.y<-1) { for (int y=0;y<3;y++) { for (int z=1;z<3;z++) {
+      leg.balanceValue[L][y][z]+=leg.adjDirValue[L][y][z]; leg.balanceValue[R][y][z]-=leg.adjDirValue[R][y][z]; } } doBalancing(); } } }
 
 void setQueue(int x,int y,int z,int targetValue,unsigned long timeValue,int speedValue) {
   //timeValue=0 starts at the same time as last
@@ -52,7 +71,7 @@ void setQueue(int x,int y,int z,int targetValue,unsigned long timeValue,int spee
   //speedValue=1 use last speed
   //speedValue=x speed is x per second
   for (int a=0;a<100;a++) { if (queue.steps[a]==0) {
-    queue.side[a]=x;
+    queue.servo[a][0]=x; queue.servo[a][1]=y; queue.servo[a][2]=z;
     queue.channel[a]=leg.channel[x][y][z];
     queue.currentValue[a]=leg.currentValue[x][y][z];
     queue.targetValue[a]=targetValue+(leg.adjustValue[x][y][z]*leg.adjDirValue[x][y][z]);
@@ -102,7 +121,7 @@ void saveLegAdjust() {
   preferences.end(); }
 
 void initBody() {
-  bodyTimer=millis()+10; lastTime=millis()+10; lastSteps=100; lastSpeed=100; loadLegAdjust();
+  bodyTimer=millis()+10; balanceTimer=millis()+100; lastTime=millis()+10; lastSteps=100; lastSpeed=100; loadLegAdjust();
   for (int a=0;a<100;a++) { queue.steps[a]=0; }
   int servoFreq=50;
   //int servoMin=4096/(1000/servoFreq)*1;
@@ -111,20 +130,22 @@ void initBody() {
   //int servoMax=4096/(1000/servoFreq)*2;
   int servoMax=4096/(1000/servoFreq)*1.75;
 
-  int c=0; for (int x=0;x<3;x++) { for (int y=0;y<3;y++) {
-    leg.midValue[L][x][y]=servoDef; leg.midValue[R][x][y]=servoDef;
-    if (y==S) { leg.frontValue[L][x][y]=servoMax; leg.frontValue[R][x][y]=servoMin; }
-    if (y==S) { leg.rearValue[L][x][y]=servoMin; leg.rearValue[R][x][y]=servoMax; }
-    if (y==S) { leg.adjDirValue[L][x][y]=1; leg.adjDirValue[R][x][y]=-1; }
-    if (y==K) { leg.upValue[L][x][y]=servoMax; leg.upValue[R][x][y]=servoMin; }
-    if (y==K) { leg.downValue[L][x][y]=servoMin; leg.downValue[R][x][y]=servoMax; }
-    if (y==K) { leg.adjDirValue[L][x][y]=1; leg.adjDirValue[R][x][y]=-1; }
-    if (y==F) { leg.upValue[L][x][y]=servoMin; leg.upValue[R][x][y]=servoMax; }
-    if (y==F) { leg.downValue[L][x][y]=servoMax; leg.downValue[R][x][y]=servoMin; }
-    if (y==F) { leg.adjDirValue[L][x][y]=-1; leg.adjDirValue[R][x][y]=1; }
-    leg.currentValue[L][x][y]=servoDef+(leg.adjustValue[L][x][y]*leg.adjDirValue[L][x][y]);
-    leg.currentValue[R][x][y]=servoDef+(leg.adjustValue[R][x][y]*leg.adjDirValue[R][x][y]);
-    leg.channel[L][x][y]=c; leg.channel[R][x][y]=c;
+  int c=0; for (int y=0;y<3;y++) { for (int z=0;z<3;z++) {
+    leg.midValue[L][y][z]=servoDef; leg.midValue[R][y][z]=servoDef;
+    leg.balanceValue[L][y][z]=0; leg.balanceValue[R][y][z]=0;
+    if (z==S) { leg.frontValue[L][y][z]=servoMax; leg.frontValue[R][y][z]=servoMin; }
+    if (z==S) { leg.rearValue[L][y][z]=servoMin; leg.rearValue[R][y][z]=servoMax; }
+    if (z==S) { leg.adjDirValue[L][y][z]=1; leg.adjDirValue[R][y][z]=-1; }
+    if (z==K) { leg.upValue[L][y][z]=servoMax; leg.upValue[R][y][z]=servoMin; }
+    if (z==K) { leg.downValue[L][y][z]=servoMin; leg.downValue[R][y][z]=servoMax; }
+    if (z==K) { leg.adjDirValue[L][y][z]=1; leg.adjDirValue[R][y][z]=-1; }
+    if (z==F) { leg.upValue[L][y][z]=servoMin; leg.upValue[R][y][z]=servoMax; }
+    if (z==F) { leg.downValue[L][y][z]=servoMax; leg.downValue[R][y][z]=servoMin; }
+    if (z==F) { leg.adjDirValue[L][y][z]=1; leg.adjDirValue[R][y][z]=-1; }
+    leg.currentValue[L][y][z]=servoDef+(leg.adjustValue[L][y][z]*leg.adjDirValue[L][y][z]);
+    leg.currentValue[R][y][z]=servoDef+(leg.adjustValue[R][y][z]*leg.adjDirValue[R][y][z]);
+    leg.nowValue[L][y][z]=leg.currentValue[L][y][z]; leg.nowValue[R][y][z]=leg.currentValue[R][y][z];
+    leg.channel[L][y][z]=c; leg.channel[R][y][z]=c;
     if (c==2) { c=7; } else if (c==9) { c=13; } else { c++; } } }
 
   pwmLinks.begin(); pwmLinks.setPWMFreq(servoFreq);

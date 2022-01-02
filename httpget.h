@@ -33,7 +33,7 @@ String httpget(String request) {
   else if (request.indexOf("/setLegAdjust")>=0) {
     int a=request.indexOf(",")+1; int b=request.indexOf(",",a)+1; int c=request.indexOf(",",b)+1;
     int x=request.substring(a,b-1).toInt(); int y=request.substring(b,c-1).toInt(); int z=request.substring(c).toInt();
-    leg.adjustValue[x][y][K]+=z; leg.adjustValue[x][y][F]+=z*-1; setLeg(x,y,Up,1,200); setLeg(x,y,Down,1,1); }
+    leg.adjustValue[x][y][K]+=z; leg.adjustValue[x][y][F]+=z; setLeg(x,y,Up,1,200); setLeg(x,y,Down,1,1); }
 
   else if (request.indexOf("/loadLegAdjust")>=0) { loadLegAdjust(); }
   else if (request.indexOf("/saveLegAdjust")>=0) { saveLegAdjust(); }
