@@ -40,4 +40,4 @@ void initDist() {
   dist.sweepStep=20;
   dist.valueUpdate=false;
   for (int a=0;a<=40;a++) { dist.valueArray[a]=9999; }
-  setSweep(true); }
+  setSweep(false); }

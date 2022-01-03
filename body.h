@@ -6,12 +6,14 @@ Adafruit_PWMServoDriver pwmRechts=Adafruit_PWMServoDriver(0x41);
 enum {L,R};   // Links, Rechts
 enum {V,M,H}; // Vorne, Mitte, Hinten
 enum {S,K,F}; // Schulter, Knie, Fuß
-enum {Default,Up,Down,Front,Mid,Rear,Left,Right};
+enum {Default,Up,Up2,Down,Down2,Front,Mid,Rear,Left,Right};
 
 struct legStruct {
   int upValue[2][3][3];
+  int up2Value[2][3][3];
   int midValue[2][3][3];
   int downValue[2][3][3];
+  int down2Value[2][3][3];
   int frontValue[2][3][3];
   int rearValue[2][3][3];
   int adjustValue[2][3][3];
@@ -96,6 +98,9 @@ void setLeg(int x,int y, int z,unsigned long timeValue, int speedValue) {
   if (z==Up) {
     setQueue(x,y,K,leg.upValue[x][y][K],timeValue,speedValue);
     setQueue(x,y,F,leg.downValue[x][y][F],0,0); }
+  if (z==Up2) {
+    setQueue(x,y,K,leg.up2Value[x][y][K],timeValue,speedValue);
+    setQueue(x,y,F,leg.down2Value[x][y][F],0,0); }
   if (z==Down) {
     setQueue(x,y,K,leg.midValue[x][y][K],timeValue,speedValue);
     setQueue(x,y,F,leg.midValue[x][y][F],0,0); }
@@ -124,26 +129,38 @@ void initBody() {
   bodyTimer=millis()+10; balanceTimer=millis()+100; lastTime=millis()+10; lastSteps=100; lastSpeed=100; balanceMode=false; loadLegAdjust();
   for (int a=0;a<100;a++) { queue.steps[a]=0; }
   int servoFreq=50;
-  //int servoMin=4096/(1000/servoFreq)*1;
+  int servoMin2=4096/(1000/servoFreq)*1;
   int servoMin=4096/(1000/servoFreq)*1.25;
   int servoDef=4096/(1000/servoFreq)*1.5;
-  //int servoMax=4096/(1000/servoFreq)*2;
   int servoMax=4096/(1000/servoFreq)*1.75;
+  int servoMax2=4096/(1000/servoFreq)*2;
 
   int c=0; for (int y=0;y<3;y++) { for (int z=0;z<3;z++) {
     leg.midValue[L][y][z]=servoDef; leg.midValue[R][y][z]=servoDef;
     leg.balanceValue[L][y][z]=0; leg.balanceValue[R][y][z]=0;
-    if (z==S) { leg.frontValue[L][y][z]=servoMax; leg.frontValue[R][y][z]=servoMin; }
-    if (z==S) { leg.rearValue[L][y][z]=servoMin; leg.rearValue[R][y][z]=servoMax; }
-    if (z==S) { leg.adjDirValue[L][y][z]=1; leg.adjDirValue[R][y][z]=-1; }
-    if (z==K) { leg.upValue[L][y][z]=servoMax; leg.upValue[R][y][z]=servoMin; }
-    if (z==K) { leg.downValue[L][y][z]=servoMin; leg.downValue[R][y][z]=servoMax; }
-    if (z==K) { leg.adjDirValue[L][y][z]=1; leg.adjDirValue[R][y][z]=-1; }
-    if (z==F) { leg.upValue[L][y][z]=servoMin; leg.upValue[R][y][z]=servoMax; }
-    if (z==F) { leg.downValue[L][y][z]=servoMax; leg.downValue[R][y][z]=servoMin; }
-    if (z==F) { leg.adjDirValue[L][y][z]=1; leg.adjDirValue[R][y][z]=-1; }
-    leg.currentValue[L][y][z]=servoDef+(leg.adjustValue[L][y][z]*leg.adjDirValue[L][y][z]);
-    leg.currentValue[R][y][z]=servoDef+(leg.adjustValue[R][y][z]*leg.adjDirValue[R][y][z]);
+    if (z==S) {
+      leg.frontValue[L][y][z]=servoMax; leg.frontValue[R][y][z]=servoMin;
+      leg.rearValue[L][y][z]=servoMin; leg.rearValue[R][y][z]=servoMax;
+      leg.adjDirValue[L][y][z]=1; leg.adjDirValue[R][y][z]=-1;
+      leg.currentValue[L][y][z]=servoDef+(leg.adjustValue[L][y][z]*leg.adjDirValue[L][y][z]);
+      leg.currentValue[R][y][z]=servoDef+(leg.adjustValue[R][y][z]*leg.adjDirValue[R][y][z]); }
+    if (z==K) {
+      leg.upValue[L][y][z]=servoMax; leg.upValue[R][y][z]=servoMin;
+      leg.up2Value[L][y][z]=servoMax2; leg.up2Value[R][y][z]=servoMin2;
+      leg.downValue[L][y][z]=servoMin; leg.downValue[R][y][z]=servoMax;
+      leg.down2Value[L][y][z]=servoMin2; leg.down2Value[R][y][z]=servoMax2;
+      leg.adjDirValue[L][y][z]=1; leg.adjDirValue[R][y][z]=-1;
+      leg.currentValue[L][y][z]=servoMax2+(leg.adjustValue[L][y][z]*leg.adjDirValue[L][y][z]);
+      leg.currentValue[R][y][z]=servoMin2+(leg.adjustValue[R][y][z]*leg.adjDirValue[R][y][z]); }
+    if (z==F) {
+      leg.upValue[L][y][z]=servoMin; leg.upValue[R][y][z]=servoMax;
+      leg.up2Value[L][y][z]=servoMin2; leg.up2Value[R][y][z]=servoMax2;
+      leg.downValue[L][y][z]=servoMax; leg.downValue[R][y][z]=servoMin;
+      leg.down2Value[L][y][z]=servoMax2; leg.down2Value[R][y][z]=servoMin2;
+      leg.adjDirValue[L][y][z]=1; leg.adjDirValue[R][y][z]=-1;
+      leg.currentValue[L][y][z]=servoMin2+(leg.adjustValue[L][y][z]*leg.adjDirValue[L][y][z]);
+      leg.currentValue[R][y][z]=servoMax2+(leg.adjustValue[R][y][z]*leg.adjDirValue[R][y][z]); }
+
     leg.nowValue[L][y][z]=leg.currentValue[L][y][z]; leg.nowValue[R][y][z]=leg.currentValue[R][y][z];
     leg.channel[L][y][z]=c; leg.channel[R][y][z]=c;
     if (c==2) { c=7; } else if (c==9) { c=13; } else { c++; } } }

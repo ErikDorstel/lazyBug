@@ -1,10 +1,10 @@
 void lbStandUp() {
-  setLeg(L,V,Up,1,50); setLeg(R,V,Up,0,1); setLeg(L,V,Front,0,1); setLeg(R,V,Front,0,1);
-  setLeg(L,M,Up,1,50); setLeg(R,M,Up,0,1); setLeg(L,M,Mid,0,1); setLeg(R,M,Mid,0,1);
-  setLeg(L,H,Up,1,50); setLeg(R,H,Up,0,1); setLeg(L,H,Rear,0,1); setLeg(R,H,Rear,0,1);
-  setLeg(L,V,Default,1,50); setLeg(R,V,Default,0,1);
-  setLeg(L,M,Default,1,50); setLeg(R,M,Default,0,1);
-  setLeg(L,H,Default,1,50); setLeg(R,H,Default,0,1); }
+  setLeg(L,V,Up2,1,50); setLeg(R,V,Up2,0,1); setLeg(L,V,Front,0,1); setLeg(R,V,Front,0,1);
+  setLeg(L,M,Up2,1,50); setLeg(R,M,Up2,0,1); setLeg(L,M,Mid,0,1); setLeg(R,M,Mid,0,1);
+  setLeg(L,H,Up2,1,50); setLeg(R,H,Up2,0,1); setLeg(L,H,Rear,0,1); setLeg(R,H,Rear,0,1);
+  setLeg(L,V,Down,1,50); setLeg(R,V,Down,0,1); setLeg(L,V,Mid,0,1); setLeg(R,V,Mid,0,1);
+  setLeg(L,M,Down,1,50); setLeg(R,M,Down,0,1);
+  setLeg(L,H,Down,1,50); setLeg(R,H,Down,0,1); setLeg(L,H,Mid,0,1); setLeg(R,H,Mid,0,1); }
 
 void lbTest1() {
   setLeg(L,V,Up,1,200); setLeg(L,V,Down,1,1);
