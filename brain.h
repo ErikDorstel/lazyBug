@@ -1,6 +1,10 @@
-void lbDefault() {
-  setLeg(L,V,Default,1,200); setLeg(L,M,Default,100,1); setLeg(L,H,Default,100,1);
-  setLeg(R,V,Default,100,1); setLeg(R,M,Default,100,1); setLeg(R,H,Default,100,1); }
+void lbStandUp() {
+  setLeg(L,V,Up,1,50); setLeg(R,V,Up,0,1); setLeg(L,V,Front,0,1); setLeg(R,V,Front,0,1);
+  setLeg(L,M,Up,1,50); setLeg(R,M,Up,0,1); setLeg(L,M,Mid,0,1); setLeg(R,M,Mid,0,1);
+  setLeg(L,H,Up,1,50); setLeg(R,H,Up,0,1); setLeg(L,H,Rear,0,1); setLeg(R,H,Rear,0,1);
+  setLeg(L,V,Default,1,50); setLeg(R,V,Default,0,1);
+  setLeg(L,M,Default,1,50); setLeg(R,M,Default,0,1);
+  setLeg(L,H,Default,1,50); setLeg(R,H,Default,0,1); }
 
 void lbTest1() {
   setLeg(L,V,Up,1,200); setLeg(L,V,Down,1,1);

@@ -34,7 +34,7 @@ struct queueStruct {
 
 struct queueStruct queue;
 
-unsigned long bodyTimer; unsigned long balanceTimer; unsigned long lastTime; int lastSteps; int lastSpeed;
+unsigned long bodyTimer; unsigned long balanceTimer; unsigned long lastTime; int lastSteps; int lastSpeed; bool balanceMode;
 
 void bodyWorker() {
   if (millis()>=bodyTimer) { bodyTimer=millis()+10;
@@ -53,7 +53,7 @@ void doBalancing() {
     pwmRechts.setPWM(leg.channel[R][y][z],0,leg.nowValue[R][y][z]+leg.balanceValue[R][y][z]*2); } } }
 
 void balanceWorker() {
-  if (millis()>=balanceTimer) { balanceTimer=millis()+100;
+  if (millis()>=balanceTimer) { balanceTimer=millis()+100; if (balanceMode) {
     if (tilt.x>+1) { for (int x=0;x<2;x++) { for (int z=1;z<3;z++) {
       leg.balanceValue[x][V][z]+=leg.adjDirValue[x][V][z]; leg.balanceValue[x][H][z]-=leg.adjDirValue[x][H][z]; } } doBalancing(); }
     else if (tilt.x<-1) { for (int x=0;x<2;x++) { for (int z=1;z<3;z++) {
@@ -61,7 +61,7 @@ void balanceWorker() {
     if (tilt.y>+1) { for (int y=0;y<3;y++) { for (int z=1;z<3;z++) {
       leg.balanceValue[L][y][z]-=leg.adjDirValue[L][y][z]; leg.balanceValue[R][y][z]+=leg.adjDirValue[R][y][z]; } } doBalancing(); }
     else if (tilt.y<-1) { for (int y=0;y<3;y++) { for (int z=1;z<3;z++) {
-      leg.balanceValue[L][y][z]+=leg.adjDirValue[L][y][z]; leg.balanceValue[R][y][z]-=leg.adjDirValue[R][y][z]; } } doBalancing(); } } }
+      leg.balanceValue[L][y][z]+=leg.adjDirValue[L][y][z]; leg.balanceValue[R][y][z]-=leg.adjDirValue[R][y][z]; } } doBalancing(); } } } }
 
 void setQueue(int x,int y,int z,int targetValue,unsigned long timeValue,int speedValue) {
   //timeValue=0 starts at the same time as last
@@ -121,7 +121,7 @@ void saveLegAdjust() {
   preferences.end(); }
 
 void initBody() {
-  bodyTimer=millis()+10; balanceTimer=millis()+100; lastTime=millis()+10; lastSteps=100; lastSpeed=100; loadLegAdjust();
+  bodyTimer=millis()+10; balanceTimer=millis()+100; lastTime=millis()+10; lastSteps=100; lastSpeed=100; balanceMode=false; loadLegAdjust();
   for (int a=0;a<100;a++) { queue.steps[a]=0; }
   int servoFreq=50;
   //int servoMin=4096/(1000/servoFreq)*1;
