@@ -49,7 +49,9 @@ function openStream() {
 
 function streamMessage(event) { sweepArray=new Int16Array(event.data); doDisplaySweep(); }
 
+function lbDefault() { requestAJAX('lbDefault'); }
 function lbStandUp() { requestAJAX('lbStandUp'); }
+function lbSitDown() { requestAJAX('lbSitDown'); }
 function lbTest1() { requestAJAX('lbTest1'); }
 function lbTest2() { requestAJAX('lbTest2'); }
 function turnLeftA() { requestAJAX('turnLeftA'); }
@@ -149,7 +151,9 @@ function id(id) { return document.getElementById(id); }
      <div class="x4" onclick="setLegAdjust(-1);">&#8722; 1</div>
      <div class="x4" onclick="setLegAdjust(1);">+ 1</div>
      <div class="x4" onclick="setLegAdjust(10);">+ 10</div></div>
+<div><div class="x1" onclick="lbDefault();">Default</div></div>
 <div><div class="x1" onclick="lbStandUp();">Stand Up</div></div>
+<div><div class="x1" onclick="lbSitDown();">Sit Down</div></div>
 <div><div class="x1" onclick="lbTest1();">Test 1</div></div>
 <div><div class="x1" onclick="lbTest2();">Test 2</div></div>
 <div><div class="x2" onclick="turnLeftA();">Turn Left A</div>

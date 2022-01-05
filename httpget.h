@@ -3,7 +3,9 @@ String httpget(String request) {
 
   // lazyBug specific pages
 
-  if (request.indexOf("/lbStandUp")>=0) { lbStandUp(); }
+  if (request.indexOf("/lbDefault")>=0) { lbDefault(); }
+  else if (request.indexOf("/lbStandUp")>=0) { lbStandUp(); }
+  else if (request.indexOf("/lbSitDown")>=0) { lbSitDown(); }
   else if (request.indexOf("/lbTest1")>=0) { lbTest1(); }
   else if (request.indexOf("/lbTest2")>=0) { lbTest2(); }
   else if (request.indexOf("/turnLeftA")>=0) { turnLeftA(); }

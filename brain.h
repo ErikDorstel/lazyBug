@@ -1,10 +1,15 @@
+void lbDefault() {
+  setLeg(L,V,Default,1,200); setLeg(L,M,Default,0,1); setLeg(L,H,Default,0,1);
+  setLeg(R,V,Default,0,1); setLeg(R,M,Default,0,1); setLeg(R,H,Default,0,1); }
+
 void lbStandUp() {
-  setLeg(L,V,Up2,1,50); setLeg(R,V,Up2,0,1); setLeg(L,V,Front,0,1); setLeg(R,V,Front,0,1);
-  setLeg(L,M,Up2,1,50); setLeg(R,M,Up2,0,1); setLeg(L,M,Mid,0,1); setLeg(R,M,Mid,0,1);
-  setLeg(L,H,Up2,1,50); setLeg(R,H,Up2,0,1); setLeg(L,H,Rear,0,1); setLeg(R,H,Rear,0,1);
-  setLeg(L,V,Down,1,50); setLeg(R,V,Down,0,1); setLeg(L,V,Mid,0,1); setLeg(R,V,Mid,0,1);
-  setLeg(L,M,Down,1,50); setLeg(R,M,Down,0,1);
-  setLeg(L,H,Down,1,50); setLeg(R,H,Down,0,1); setLeg(L,H,Mid,0,1); setLeg(R,H,Mid,0,1); }
+  setLeg(L,V,Default,1,50); setLeg(L,M,Default,0,1); setLeg(L,H,Default,0,1);
+  setLeg(R,V,Default,0,1); setLeg(R,M,Default,0,1); setLeg(R,H,Default,0,1); }
+
+void lbSitDown() {
+  setLeg(L,V,Up2,1,50); setLeg(R,V,Up2,0,1); setLeg(L,V,Mid,0,1); setLeg(R,V,Mid,0,1);
+  setLeg(L,M,Up2,0,50); setLeg(R,M,Up2,0,1); setLeg(L,M,Mid,0,1); setLeg(R,M,Mid,0,1);
+  setLeg(L,H,Up2,0,50); setLeg(R,H,Up2,0,1); setLeg(L,H,Mid,0,1); setLeg(R,H,Mid,0,1); }
 
 void lbTest1() {
   setLeg(L,V,Up,1,200); setLeg(L,V,Down,1,1);
@@ -15,7 +20,7 @@ void lbTest1() {
   setLeg(R,H,Up,1,1); setLeg(R,H,Down,1,1); }
 
 void lbTest2() {
-  setLeg(L,V,Up,1,200); setLeg(L,V,Front,0,0); setLeg(L,V,Down,1,1);
+  setLeg(L,V,Up,1,50); setLeg(L,V,Front,0,0); setLeg(L,V,Down,1,1);
   setLeg(R,V,Up,1,1); setLeg(R,V,Front,0,0); setLeg(R,V,Down,1,1);
   setLeg(L,V,Rear,1,1); setLeg(L,V,Up,0,0); setLeg(L,V,Down,1,1);
   setLeg(R,V,Rear,1,1); setLeg(R,V,Up,0,0); setLeg(R,V,Down,1,1);
@@ -87,7 +92,7 @@ void goRearB() {
   setTri(R,Down,1,1); }
 
 void goFrontC() {
-  setTri(R,Up,1,20);
+  setTri(R,Up,1,50);
   setTri(L,Rear,0,1);
   setTri(R,Down,1,1);
   setTri(L,Up,1,1);
@@ -99,7 +104,7 @@ void goFrontC() {
   setTri(R,Down,1,1); }
 
 void turnLeftC() {
-  setTri(R,Up,1,20);
+  setTri(R,Up,1,50);
   setTri(L,Right,0,1);
   setTri(R,Down,1,1);
   setTri(L,Up,1,1);

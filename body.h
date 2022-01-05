@@ -86,24 +86,25 @@ void setQueue(int x,int y,int z,int targetValue,unsigned long timeValue,int spee
     else if (timeValue>1) { timeValue+=lastSteps*10; }
     queue.timeValue[a]=max(lastTime+timeValue,millis());
     lastSteps=queue.steps[a]; lastTime=queue.timeValue[a];
-    if (debug) { Serial.println("Set Queue " + String(x) + " " + String(y) + " " + String(z) + " to Value " + String(targetValue) + " in " + String(lastTime-millis()) + " ms."); }
-    break; } }
-  leg.currentValue[x][y][z]=targetValue+(leg.adjustValue[x][y][z]*leg.adjDirValue[x][y][z]); }
+    leg.currentValue[x][y][z]=queue.targetValue[a];
+    if (debug) { Serial.print("Set Queue " + String(x) + " " + String(y) + " " + String(z) + " from " + String(queue.currentValue[a]) + " to " + String(queue.targetValue[a]));
+      Serial.println(" in " + String(lastTime-millis()) + " ms with " + String(queue.steps[a]) + " Steps and " + String(lastSpeed) + " Speed."); }
+    break; } } }
     
 void setLeg(int x,int y, int z,unsigned long timeValue, int speedValue) {
   if (z==Default) {
     setQueue(x,y,S,leg.midValue[x][y][S],timeValue,speedValue);
-    setQueue(x,y,K,leg.midValue[x][y][K],0,0);
-    setQueue(x,y,F,leg.midValue[x][y][F],0,0); }
+    setQueue(x,y,K,leg.midValue[x][y][K],0,speedValue);
+    setQueue(x,y,F,leg.midValue[x][y][F],0,speedValue); }
   if (z==Up) {
     setQueue(x,y,K,leg.upValue[x][y][K],timeValue,speedValue);
-    setQueue(x,y,F,leg.downValue[x][y][F],0,0); }
+    setQueue(x,y,F,leg.downValue[x][y][F],0,speedValue); }
   if (z==Up2) {
     setQueue(x,y,K,leg.up2Value[x][y][K],timeValue,speedValue);
-    setQueue(x,y,F,leg.down2Value[x][y][F],0,0); }
+    setQueue(x,y,F,leg.down2Value[x][y][F],0,speedValue); }
   if (z==Down) {
     setQueue(x,y,K,leg.midValue[x][y][K],timeValue,speedValue);
-    setQueue(x,y,F,leg.midValue[x][y][F],0,0); }
+    setQueue(x,y,F,leg.midValue[x][y][F],0,speedValue); }
   if (z==Front) { setQueue(x,y,S,leg.frontValue[x][y][S],timeValue,speedValue); }
   if (z==Mid) { setQueue(x,y,S,leg.midValue[x][y][S],timeValue,speedValue); }
   if (z==Rear) { setQueue(x,y,S,leg.rearValue[x][y][S],timeValue,speedValue); }
@@ -158,8 +159,8 @@ void initBody() {
       leg.downValue[L][y][z]=servoMax; leg.downValue[R][y][z]=servoMin;
       leg.down2Value[L][y][z]=servoMax2; leg.down2Value[R][y][z]=servoMin2;
       leg.adjDirValue[L][y][z]=1; leg.adjDirValue[R][y][z]=-1;
-      leg.currentValue[L][y][z]=servoMin2+(leg.adjustValue[L][y][z]*leg.adjDirValue[L][y][z]);
-      leg.currentValue[R][y][z]=servoMax2+(leg.adjustValue[R][y][z]*leg.adjDirValue[R][y][z]); }
+      leg.currentValue[L][y][z]=servoMax2+(leg.adjustValue[L][y][z]*leg.adjDirValue[L][y][z]);
+      leg.currentValue[R][y][z]=servoMin2+(leg.adjustValue[R][y][z]*leg.adjDirValue[R][y][z]); }
 
     leg.nowValue[L][y][z]=leg.currentValue[L][y][z]; leg.nowValue[R][y][z]=leg.currentValue[R][y][z];
     leg.channel[L][y][z]=c; leg.channel[R][y][z]=c;
