@@ -27,8 +27,10 @@ String httpget(String request) {
     response+=String(tilt.x) + "," + String(tilt.y) + "," + String(tilt.z) + "," + String(tilt.d) + "," + String(tilt.xy) + ","; }
 
   else if (request.indexOf("/setSweep")>=0) { int a=request.indexOf(",")+1; setSweep(request.substring(a).toInt()); }
+  else if (request.indexOf("/getSweep")>=0) { response+=String(dist.sweepActive) + ","; }
 
-  else if (request.indexOf("/setBalance")>=0) { int a=request.indexOf(",")+1; balanceMode=request.substring(a).toInt(); }
+  else if (request.indexOf("/setBalancing")>=0) { int a=request.indexOf(",")+1; balanceMode=request.substring(a).toInt(); }
+  else if (request.indexOf("/getBalancing")>=0) { response+=String(balanceMode) + ","; }
 
   else if (request.indexOf("/getLegAdjust")>=0) {
     for (int x=0;x<2;x++) { for (int y=0;y<3;y++) {

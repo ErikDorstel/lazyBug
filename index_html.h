@@ -28,6 +28,7 @@ function lazyBuginit() {
   ajaxObj=[]; tiltX=0; tiltY=0; tiltZ=0; tiltD=0; tiltXY=0;
   getTilt(); getTiltID=window.setInterval("getTilt();",1000);
   openStream(); legAdjust="0,0,0,0,0,0,"; getLegAdjust();
+  sweepActive=0; getSweep(); balancingActive=0; getBalancing();
   doDisplay(); }
   
 function doDisplay() {
@@ -36,6 +37,8 @@ function doDisplay() {
   id("tiltZ").innerHTML="Z: "+tiltZ+" &#176;";
   id("tiltD").innerHTML="Direction: "+tiltD+" &#176;";
   id("tiltXY").innerHTML="Tilt: "+tiltXY+" &#176;";
+  if (sweepActive==0) { id("sweepBtn").style.color="#404040"; } else { id("sweepBtn").style.color="#ffffff"; }
+  if (balancingActive==0) { id("balancingBtn").style.color="#404040"; } else { id("balancingBtn").style.color="#ffffff"; }
   html="<table><tr><td> </td><td>Front</td><td>Middle</td><td>Rear</td></tr>";
   html+="<tr><td>Right</td><td>"+legAdjust.split(",")[3]+"</td><td>"+legAdjust.split(",")[4]+"</td><td>"+legAdjust.split(",")[5]+"</td></tr>";
   html+="<tr><td>Left</td><td>"+legAdjust.split(",")[0]+"</td><td>"+legAdjust.split(",")[1]+"</td><td>"+legAdjust.split(",")[2]+"</td></tr></table>";
@@ -65,8 +68,10 @@ function goFrontC() { requestAJAX('goFrontC'); }
 function goRearA() { requestAJAX('goRearA'); }
 function goRearB() { requestAJAX('goRearB'); }
 function getTilt() { requestAJAX('getTilt'); }
-function setSweep(value) { if (value==0) { id("disSweepBtn").style.color="#404040"; } else { id("enaSweepBtn").style.color="#404040"; } requestAJAX('setSweep,'+value); }
-function setBalance(value) { if (value==0) { id("disBalBtn").style.color="#404040"; } else { id("enaBalBtn").style.color="#404040"; } requestAJAX('setBalance,'+value); }
+function getSweep() { requestAJAX('getSweep'); }
+function setSweep() { if (sweepActive==0) { sweepActive=1; } else  { sweepActive=0; } requestAJAX('setSweep,'+sweepActive); }
+function getBalancing() { requestAJAX('getBalancing'); }
+function setBalancing() { if (balancingActive==0) { balancingActive=1; } else  { balancingActive=0; } requestAJAX('setBalancing,'+balancingActive); }
 function calibrateTilt() { id("calBtn").style.color="#404040"; requestAJAX('calibrateTilt'); }
 function loadTiltCalibration() { id("calLoadBtn").style.color="#404040"; requestAJAX('loadTiltCalibration'); }
 function saveTiltCalibration() { id("calSaveBtn").style.color="#404040"; requestAJAX('saveTiltCalibration'); }
@@ -104,8 +109,8 @@ function replyAJAX(event) {
     else if (event.target.url=="calibrateTilt") { id("calBtn").style.color="#ffffff"; }
     else if (event.target.url=="loadTiltCalibration") { id("calLoadBtn").style.color="#ffffff"; }
     else if (event.target.url=="saveTiltCalibration") { id("calSaveBtn").style.color="#ffffff"; }
-    else if (event.target.url.startsWith("setSweep")) { id("enaSweepBtn").style.color="#ffffff"; id("disSweepBtn").style.color="#ffffff"; }
-    else if (event.target.url.startsWith("setBalance")) { id("enaBalBtn").style.color="#ffffff"; id("disBalBtn").style.color="#ffffff"; }
+    else if (event.target.url=="getSweep") { sweepActive=event.target.responseText.split(",")[0]*1; doDisplay(); }
+    else if (event.target.url=="getBalancing") { balancingActive=event.target.responseText.split(",")[0]*1; doDisplay(); }
     else if (event.target.url=="loadLegAdjust") { getLegAdjust(); id("adjLoadBtn").style.color="#ffffff"; }
     else if (event.target.url=="saveLegAdjust") { id("adjSaveBtn").style.color="#ffffff"; }
     else if (event.target.url=="getLegAdjust") { legAdjust=event.target.responseText; doDisplay(); } } }
@@ -128,13 +133,11 @@ function id(id) { return document.getElementById(id); }
      <div class="x2" id="tiltXY"></div></div>
 <div><div class="x1" id="dist">Distance: 9999 mm</div></div>
 <div><div class="x1"><canvas id="sweepFrame" width="400px" height="200px"></canvas></div></div>
-<div><div class="x2" id="enaSweepBtn" onclick="setSweep(1);">Sweep On</div>
-     <div class="x2" id="disSweepBtn" onclick="setSweep(0);">Sweep Off</div></div>
+<div><div class="x2" id="sweepBtn" onclick="setSweep();">Auto Sweep</div>
+     <div class="x2" id="balancingBtn" onclick="setBalancing();">Self Balancing</div></div>
 <div><div class="x3" id="calLoadBtn" onclick="loadTiltCalibration();">Load</div>
      <div class="x3" id="calBtn" onclick="calibrateTilt();">Calibrate Tilt Sensor</div>
      <div class="x3" id="calSaveBtn" onclick="saveTiltCalibration();">Save</div></div>
-<div><div class="x2" id="enaBalBtn" onclick="setBalance(1);">Balancing On</div>
-     <div class="x2" id="disBalBtn" onclick="setBalance(0);">Balancing Off</div></div>
 <div><div class="x1" id="adjBtn"></div></div>
 <div><div class="x3">Leg Adjust Values</div>
      <div class="x3" id="adjLoadBtn" onclick="loadLegAdjust();">Load</div>
