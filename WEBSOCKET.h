@@ -10,7 +10,8 @@ void streamEvent(uint8_t num,WStype_t type,uint8_t * payload,size_t length) {
     case WStype_DISCONNECTED: { if (debug) { Serial.println(String(stream.connectedClients()) + " Websocket clients connected."); } }
     case WStype_TEXT: { }
     case WStype_BIN: { }
-    case WStype_ERROR: { } } }
+    case WStype_ERROR: { }
+    default: { } } }
 
 void initWEBSOCKET() {
   stream.begin();
@@ -18,5 +19,5 @@ void initWEBSOCKET() {
 
 void websocketWorker() {
   stream.loop(); if (millis()>=websocketTimer) { websocketTimer=millis()+100;
-    if (stream.connectedClients()>0 & dist.valueUpdate==true) {
+    if (stream.connectedClients()>0 && dist.valueUpdate==true) {
       dist.valueUpdate=false; stream.broadcastBIN((byte*)dist.valueArray,41*2); } } }

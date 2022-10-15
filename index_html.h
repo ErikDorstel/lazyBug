@@ -1,4 +1,4 @@
-char *index_html=R"(
+const char *index_html=R"(
 
 <!DOCTYPE html>
 <html lang="en"><head>
@@ -24,8 +24,9 @@ td     { text-align:right; }
 </style>
 <script>
 
-function lazyBuginit() {
-  ajaxObj=[]; tiltX=0; tiltY=0; tiltZ=0; tiltD=0; tiltXY=0;
+function webUIinit() {
+  ajaxObj=[]; appName="&nbsp;"; appDesc="&nbsp;"; requestAJAX('appName');
+  tiltX=0; tiltY=0; tiltZ=0; tiltD=0; tiltXY=0;
   getTilt(); getTiltID=window.setInterval("getTilt();",1000);
   openStream(); legAdjust="0,0,0,0,0,0,"; getLegAdjust();
   sweepActive=0; getSweep(); balancingActive=0; getBalancing();
@@ -104,7 +105,10 @@ function requestAJAX(value) {
 
 function replyAJAX(event) {
   if (event.target.status==200) {
-    if (event.target.url=="getTilt") { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1; tiltZ=event.target.responseText.split(",")[2]*1;
+    if (event.target.url=="appName") {
+      id("appName").innerHTML=event.target.responseText.split(",")[0];
+      id("appDesc").innerHTML=event.target.responseText.split(",")[1]; }
+    else if (event.target.url=="getTilt") { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1; tiltZ=event.target.responseText.split(",")[2]*1;
       tiltD=event.target.responseText.split(",")[3]*1; tiltXY=event.target.responseText.split(",")[4]*1; doDisplay(); }
     else if (event.target.url=="calibrateTilt") { id("calBtn").style.color="#ffffff"; }
     else if (event.target.url=="loadTiltCalibration") { id("calLoadBtn").style.color="#ffffff"; }
@@ -118,10 +122,10 @@ function replyAJAX(event) {
 function mapValue(value,inMin,inMax,outMin,outMax) { return (value-inMin)*(outMax-outMin)/(inMax-inMin)+outMin; }
 function id(id) { return document.getElementById(id); }
 
-</script></head><body onload="lazyBuginit();">
+</script></head><body onload="webUIinit();">
 
-<div><div class="x0a">lazyBug</div></div>
-<div><div class="x0b">Hexapod Robot</div></div>
+<div><div class="x0a" id="appName">&nbsp;</div></div>
+<div><div class="x0b" id="appDesc">&nbsp;</div></div>
 
 <div class="x1" onclick="location.replace('/chooseAP');">Choose WLAN AP</div></div>
 
