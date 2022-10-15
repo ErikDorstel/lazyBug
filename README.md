@@ -11,3 +11,5 @@ ESP32 based Hexapod Robot
 * PCA9685 - 0x40 and 0x41
 * MPU-6050 - 0x68
 * VL53L0X - 0x29
+#### Smartphone Screenshot
+![IMAGE ALT TEXT HERE](https://www.dorstel.de/github/lazyBug_a_v1.0.png)

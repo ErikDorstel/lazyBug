@@ -10,17 +10,17 @@ const char *index_html=R"(
 <meta charset="utf-8">
 <style>
 html   { font-family:Arial; }
-div    { background-color:#888888; color:#ffffff; border:0px; padding:0px; margin:0px; text-align:center; width:100%; user-select:none; display:inline-block; }
-select { background-color:#888888; color:#ffffff; font-size:1.0em; border:0px; padding:0px; margin:0px; }
+div    { background-color:#e0e0e0; color:#000000; border:0px; padding:0px; margin:0px; text-align:center; width:100%; user-select:none; display:inline-block; }
+select { background-color:#f0f0f0; color:#000000; font-size:1.0em; border:0px; padding:0px; margin:0px; }
 table  { margin-left:auto; margin-right:auto; }
 td     { text-align:right; }
-.x0a   { background-color:#C0A0A0; padding:0.2em 0em 0.1em; width:100%; font-size:1.5em; }
-.x0b   { background-color:#C0A0A0; padding:0.1em 0em 0.2em; width:100%; font-size:1.2em; }
-.x0    { background-color:#C0A0A0; padding:0.3em 0em; width:100%; font-size:1.4em; }
-.x1    { background-color:#A0B0C0; padding:0.3em 0em; width:100%; font-size:1.4em; }
-.x2    { background-color:#888888; padding:0.3em 0em; width:48%; font-size:1.4em; }
-.x3    { background-color:#888888; padding:0.3em 0em; width:32%; font-size:1.4em; }
-.x4    { background-color:#888888; padding:0.3em 0em; width:24%; font-size:1.4em; }
+.x0a   { background-color:#c2d5ed; padding:0.2em 0em 0.1em; width:100%; font-size:1.5em; }
+.x0b   { background-color:#c2d5ed; padding:0.1em 0em 0.2em; width:100%; font-size:1.2em; }
+.x0    { background-color:#c2d5ed; padding:0.3em 0em; width:100%; font-size:1.4em; }
+.x1    { background-color:#f0f0f0; padding:0.3em 0em; width:100%; font-size:1.4em; }
+.x2    { background-color:#e0e0e0; padding:0.3em 0em; width:48%; font-size:1.4em; }
+.x3    { background-color:#e0e0e0; padding:0.3em 0em; width:32%; font-size:1.4em; }
+.x4    { background-color:#e0e0e0; padding:0.3em 0em; width:24%; font-size:1.4em; }
 </style>
 <script>
 
@@ -38,8 +38,8 @@ function doDisplay() {
   id("tiltZ").innerHTML="Z: "+tiltZ+" &#176;";
   id("tiltD").innerHTML="Direction: "+tiltD+" &#176;";
   id("tiltXY").innerHTML="Tilt: "+tiltXY+" &#176;";
-  if (sweepActive==0) { id("sweepBtn").style.color="#404040"; } else { id("sweepBtn").style.color="#ffffff"; }
-  if (balancingActive==0) { id("balancingBtn").style.color="#404040"; } else { id("balancingBtn").style.color="#ffffff"; }
+  if (sweepActive==0) { id("sweepBtn").style.color="#f0f0f0"; id("sweepBtn").innerHTML="Auto Sweep"; } else { id("sweepBtn").style.color="#000000"; id("sweepBtn").innerHTML="Auto Sweep &check;"; }
+  if (balancingActive==0) { id("balancingBtn").style.color="#f0f0f0"; id("balancingBtn").innerHTML="Self Balancing"; } else { id("balancingBtn").style.color="#000000"; id("balancingBtn").innerHTML="Self Balancing &check;"; }
   html="<table><tr><td> </td><td>Front</td><td>Middle</td><td>Rear</td></tr>";
   html+="<tr><td>Right</td><td>"+legAdjust.split(",")[3]+"</td><td>"+legAdjust.split(",")[4]+"</td><td>"+legAdjust.split(",")[5]+"</td></tr>";
   html+="<tr><td>Left</td><td>"+legAdjust.split(",")[0]+"</td><td>"+legAdjust.split(",")[1]+"</td><td>"+legAdjust.split(",")[2]+"</td></tr></table>";
@@ -73,12 +73,12 @@ function getSweep() { requestAJAX('getSweep'); }
 function setSweep() { if (sweepActive==0) { sweepActive=1; } else  { sweepActive=0; } requestAJAX('setSweep,'+sweepActive); }
 function getBalancing() { requestAJAX('getBalancing'); }
 function setBalancing() { if (balancingActive==0) { balancingActive=1; } else  { balancingActive=0; } requestAJAX('setBalancing,'+balancingActive); }
-function calibrateTilt() { id("calBtn").style.color="#404040"; requestAJAX('calibrateTilt'); }
-function loadTiltCalibration() { id("calLoadBtn").style.color="#404040"; requestAJAX('loadTiltCalibration'); }
-function saveTiltCalibration() { id("calSaveBtn").style.color="#404040"; requestAJAX('saveTiltCalibration'); }
+function calibrateTilt() { id("calBtn").style.color="#f0f0f0"; requestAJAX('calibrateTilt'); }
+function loadTiltCalibration() { id("calLoadBtn").style.color="#f0f0f0"; requestAJAX('loadTiltCalibration'); }
+function saveTiltCalibration() { id("calSaveBtn").style.color="#f0f0f0"; requestAJAX('saveTiltCalibration'); }
 function getLegAdjust() { requestAJAX('getLegAdjust'); }
-function loadLegAdjust() { id("adjLoadBtn").style.color="#404040"; requestAJAX('loadLegAdjust'); }
-function saveLegAdjust() { id("adjSaveBtn").style.color="#404040"; requestAJAX('saveLegAdjust'); }
+function loadLegAdjust() { id("adjLoadBtn").style.color="#f0f0f0"; requestAJAX('loadLegAdjust'); }
+function saveLegAdjust() { id("adjSaveBtn").style.color="#f0f0f0"; requestAJAX('saveLegAdjust'); }
 function setLegAdjust(value) { requestAJAX('setLegAdjust,'+id("xSel").selectedIndex+','+id("ySel").selectedIndex+','+value); getLegAdjust(); }
 
 function doDisplaySweep() {
@@ -110,13 +110,13 @@ function replyAJAX(event) {
       id("appDesc").innerHTML=event.target.responseText.split(",")[1]; }
     else if (event.target.url=="getTilt") { tiltX=event.target.responseText.split(",")[0]*1; tiltY=event.target.responseText.split(",")[1]*1; tiltZ=event.target.responseText.split(",")[2]*1;
       tiltD=event.target.responseText.split(",")[3]*1; tiltXY=event.target.responseText.split(",")[4]*1; doDisplay(); }
-    else if (event.target.url=="calibrateTilt") { id("calBtn").style.color="#ffffff"; }
-    else if (event.target.url=="loadTiltCalibration") { id("calLoadBtn").style.color="#ffffff"; }
-    else if (event.target.url=="saveTiltCalibration") { id("calSaveBtn").style.color="#ffffff"; }
+    else if (event.target.url=="calibrateTilt") { id("calBtn").style.color="#000000"; }
+    else if (event.target.url=="loadTiltCalibration") { id("calLoadBtn").style.color="#000000"; }
+    else if (event.target.url=="saveTiltCalibration") { id("calSaveBtn").style.color="#000000"; }
     else if (event.target.url=="getSweep") { sweepActive=event.target.responseText.split(",")[0]*1; doDisplay(); }
     else if (event.target.url=="getBalancing") { balancingActive=event.target.responseText.split(",")[0]*1; doDisplay(); }
-    else if (event.target.url=="loadLegAdjust") { getLegAdjust(); id("adjLoadBtn").style.color="#ffffff"; }
-    else if (event.target.url=="saveLegAdjust") { id("adjSaveBtn").style.color="#ffffff"; }
+    else if (event.target.url=="loadLegAdjust") { getLegAdjust(); id("adjLoadBtn").style.color="#000000"; }
+    else if (event.target.url=="saveLegAdjust") { id("adjSaveBtn").style.color="#000000"; }
     else if (event.target.url=="getLegAdjust") { legAdjust=event.target.responseText; doDisplay(); } } }
 
 function mapValue(value,inMin,inMax,outMin,outMax) { return (value-inMin)*(outMax-outMin)/(inMax-inMin)+outMin; }
@@ -127,7 +127,7 @@ function id(id) { return document.getElementById(id); }
 <div><div class="x0a" id="appName">&nbsp;</div></div>
 <div><div class="x0b" id="appDesc">&nbsp;</div></div>
 
-<div class="x1" onclick="location.replace('/chooseAP');">Choose WLAN AP</div></div>
+<div><div class="x1" onclick="location.replace('/chooseAP');">Choose WLAN AP</div></div>
 
 <div>
 <div><div class="x3" id="tiltX"></div>
