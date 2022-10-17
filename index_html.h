@@ -28,7 +28,8 @@ function webUIinit() {
   ajaxObj=[]; appName="&nbsp;"; appDesc="&nbsp;"; requestAJAX('appName');
   tiltX=0; tiltY=0; tiltZ=0; tiltD=0; tiltXY=0;
   getTilt(); getTiltID=window.setInterval("getTilt();",1000);
-  openStream(); legAdjust="0,0,0,0,0,0,"; getLegAdjust();
+  openStream(); window.setInterval("checkStream();",5000);
+  legAdjust="0,0,0,0,0,0,"; getLegAdjust();
   sweepActive=0; getSweep(); balancingActive=0; getBalancing();
   doDisplay(); }
   
@@ -49,9 +50,11 @@ function doRange(doSet) { }
 
 function openStream() { 
   stream=new WebSocket("ws://"+window.location.hostname+":81");
-  stream.binaryType="arraybuffer"; stream.onmessage=streamMessage; }
+  stream.binaryType="arraybuffer"; stream.onmessage=streamMessage; stream.heartbeat=0; }
 
-function streamMessage(event) { sweepArray=new Int16Array(event.data); doDisplaySweep(); }
+function streamMessage(event) { stream.heartbeat++; sweepArray=new Int16Array(event.data); doDisplaySweep(); }
+
+function checkStream() { if (stream.heartbeat==0) { stream.close(); openStream(); } else { stream.heartbeat=0; } }
 
 function lbDefault() { requestAJAX('lbDefault'); }
 function lbStandUp() { requestAJAX('lbStandUp'); }
